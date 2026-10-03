@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D222D">
+<title>Biko | Serviços em Campo Mourão</title>
+<link rel="icon" id="fav">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D222D;--navy2:#143444;--navy3:#1c4357;--or:#E95B23;--ye:#EFB909;--cream:#FDF6E7;--mut:#8fa6b3;--line:rgba(253,246,231,.1);--red:#e8554e;--ok:#3fb67a}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Nunito,system-ui,sans-serif;background:#071017;color:var(--cream);display:flex;align-items:center;justify-content:center}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--ye);outline-offset:2px}
+#app{position:relative;width:100%;max-width:430px;height:100dvh;background:var(--navy);overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:500px){#app{height:min(880px,96dvh);border-radius:38px;box-shadow:0 0 0 8px #14303f,0 30px 80px #000a}}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--navy)}
+.screen.on{display:flex}
+.scroll{flex:1;overflow-y:auto;padding:0 20px 24px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+#splash{align-items:center;justify-content:center;gap:22px;z-index:50;transition:opacity .5s}
+#splash img.t{width:110px;animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+#splash img.w{width:170px;animation:pop .7s .15s both cubic-bezier(.2,1.4,.4,1)}
+#splash p{color:var(--mut);font-weight:700;font-size:.9rem}
+@keyframes pop{from{opacity:0;transform:scale(.7) translateY(14px)}to{opacity:1;transform:none}}
+.top{display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 12px}
+.top img{width:40px;border-radius:12px}
+.top .loc{flex:1;line-height:1.15}
+.top .loc small{color:var(--mut);font-weight:700;font-size:.74rem}
+.top .loc b{font-size:1.08rem;font-weight:900}
+.ib{width:42px;height:42px;border-radius:14px;background:var(--navy2);display:grid;place-items:center;flex:none}
+.ib svg{width:20px;height:20px;stroke:var(--cream);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.search{display:flex;align-items:center;gap:10px;background:var(--navy2);border-radius:18px;padding:0 16px;margin:4px 20px 14px;height:52px}
+.search svg{width:20px;stroke:var(--mut);fill:none;stroke-width:2;flex:none}
+.search input{flex:1;background:none;border:0;outline:0;font-weight:600;min-width:0}
+.search input::placeholder{color:var(--mut)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 20px 16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:9px 15px;border-radius:99px;background:var(--navy2);font-weight:800;font-size:.88rem;white-space:nowrap}
+.chip.on{background:var(--or)}
+h2{font-size:1.15rem;font-weight:900;margin:4px 0 12px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{color:var(--mut);font-weight:700;font-size:.8rem}
+.row{display:flex;gap:14px;padding:14px;margin-bottom:10px;background:var(--navy2);border-radius:20px;text-align:left;width:100%}
+.row.dest{box-shadow:inset 4px 0 0 var(--ye)}
+.av{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-weight:900;font-size:1.3rem;flex:none;color:var(--navy);overflow:hidden;background:none!important}
+.ph{display:block;border-radius:inherit;object-fit:cover}
+.row .info{flex:1;min-width:0}
+.row .nm{font-weight:900;font-size:1.02rem;display:flex;gap:8px;align-items:center}
+.row .sv{color:var(--mut);font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{display:flex;gap:12px;margin-top:7px;font-size:.84rem;font-weight:800;align-items:center;flex-wrap:wrap}
+.star{color:var(--ye)}
+.tag{background:var(--ye);color:var(--navy);font-size:.68rem;font-weight:900;padding:2px 8px;border-radius:99px}
+.off{color:var(--mut);font-weight:700}
+.on-t{color:var(--ok);font-weight:800}
+.empty{text-align:center;color:var(--mut);padding:40px 20px;font-weight:700}
+.empty b{display:block;color:var(--cream);font-size:1.05rem;margin-bottom:6px}
+nav.tabs{display:flex;background:var(--navy2);padding:8px 10px calc(env(safe-area-inset-bottom,0px) + 8px);border-top:1px solid var(--line);flex:none}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;font-size:.72rem;font-weight:800;color:var(--mut)}
+nav.tabs svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button.on{color:var(--or)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat{background:var(--navy2);border-radius:20px;padding:18px 14px;text-align:left;font-weight:900;display:flex;flex-direction:column;gap:10px}
+.cat span{font-size:1.9rem}
+.cat small{color:var(--mut);font-weight:700}
+.hero{text-align:center;padding:6px 0 18px}
+.hero h1{font-size:1.45rem;font-weight:900}
+.hero p{color:var(--mut);font-weight:700;font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);background:var(--navy2);border-radius:20px;padding:14px 4px;margin-bottom:18px}
+.stats div{text-align:center;border-left:1px solid var(--line)}
+.stats div:first-child{border:0}
+.stats b{display:block;font-size:1.12rem;font-weight:900}
+.stats small{color:var(--mut);font-weight:700;font-size:.74rem}
+.bio{color:#d6dde0;font-weight:600;line-height:1.5;margin-bottom:18px}
+.srv{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);font-weight:700}
+.srv b{color:var(--ye);white-space:nowrap}
+.rev{padding:12px 0;border-bottom:1px dashed var(--line);font-weight:600;font-size:.92rem}
+.rev .h{display:flex;justify-content:space-between;font-weight:900;margin-bottom:3px}
+.rev small{color:var(--mut);font-weight:700}
+.rev .who{display:flex;gap:10px;align-items:center}
+.rev .who .av{width:34px;height:34px;border-radius:12px}
+.bar{padding:12px 20px calc(env(safe-area-inset-bottom,0px) + 14px);background:var(--navy);border-top:1px solid var(--line);display:flex;gap:10px;flex:none}
+.btn{flex:1;background:var(--or);color:#fff;font-weight:900;border-radius:18px;padding:15px;font-size:1rem;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.sec{background:var(--navy2)}
+.btn.ye{background:var(--ye);color:var(--navy)}
+.bar .btn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;vertical-align:-4px;margin-right:6px}
+.ov{position:absolute;inset:0;background:#000a;z-index:20;display:none;align-items:flex-end}
+.ov.on{display:flex}
+.sheet{width:100%;background:var(--navy2);border-radius:28px 28px 0 0;padding:10px 20px calc(env(safe-area-inset-bottom,0px) + 22px);max-height:88%;overflow-y:auto;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(60px);opacity:.4}to{transform:none;opacity:1}}
+.sheet:before{content:"";display:block;width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 14px}
+.sheet h3{font-size:1.2rem;font-weight:900;margin-bottom:14px}
+label{display:block;font-weight:800;font-size:.84rem;color:var(--mut);margin:12px 0 6px}
+.f{width:100%;background:var(--navy);border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;font-weight:600;outline:0}
+.f:focus{border-color:var(--or)}
+textarea.f{min-height:84px;resize:none}
+.stars{display:flex;gap:6px}
+.stars button{font-size:2rem;color:var(--navy3);line-height:1}
+.stars button.on{color:var(--ye)}
+.plan{border-radius:22px;padding:18px;margin-bottom:12px;background:var(--navy2)}
+.plan.hl{background:linear-gradient(135deg,var(--or),#c9430f)}
+.plan h3{font-weight:900;font-size:1.1rem;margin-bottom:6px}
+.plan li{margin:6px 0 0 18px;font-weight:700;font-size:.92rem}
+.toast{position:absolute;left:20px;right:20px;bottom:96px;background:var(--cream);color:var(--navy);font-weight:800;padding:13px 16px;border-radius:16px;z-index:60;transform:translateY(30px);opacity:0;transition:.25s;pointer-events:none;text-align:center}
+.toast.on{transform:none;opacity:1}
+.topr{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 14px) 20px 8px;font-weight:900}
+.topr span{flex:1}
+.acts{display:flex;justify-content:center;gap:22px;margin-bottom:18px}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.76rem;font-weight:800;color:var(--mut);width:68px}
+.act i{width:50px;height:50px;border-radius:50%;background:var(--navy2);display:grid;place-items:center}
+.act svg,.ic svg{width:21px;height:21px;stroke:var(--cream);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.act.rd i{background:#3a1f26}.act.rd svg{stroke:var(--red)}.act.rd{color:#f08a85}
+.act.on i{background:var(--or)}.act.on svg{fill:#fff}
+.act.st i{background:#3a3112}.act.st svg{stroke:var(--ye)}
+.inf{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px dashed var(--line);font-weight:700;font-size:.92rem}
+.inf .ic{width:38px;height:38px;border-radius:12px;background:var(--navy2);display:grid;place-items:center;flex:none}
+.inf small{display:block;color:var(--mut);font-size:.74rem}
+.sk{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.sk span{background:var(--navy2);padding:7px 13px;border-radius:99px;font-weight:800;font-size:.84rem}
+.sum{display:flex;gap:18px;align-items:center;background:var(--navy2);border-radius:20px;padding:16px;margin-bottom:6px}
+.sum .big{text-align:center}
+.sum .big b{font-size:2.5rem;font-weight:900;line-height:1;display:block}
+.sum .big small{color:var(--mut);font-weight:700}
+.dist{flex:1;display:grid;gap:5px}
+.dist div{display:flex;align-items:center;gap:8px;font-size:.76rem;font-weight:800}
+.dist i{flex:1;height:7px;border-radius:9px;background:var(--navy);overflow:hidden}
+.dist i u{display:block;height:100%;background:var(--ye)}
+.shots{display:flex;gap:8px;margin-top:8px}
+.shots img{width:78px;height:78px;object-fit:cover;border-radius:14px;cursor:zoom-in}
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px}
+.gal figure{margin:0}
+.gal img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:18px;display:block;cursor:zoom-in}
+.gal figcaption{font-size:.78rem;font-weight:700;color:var(--mut);margin-top:5px}
+#lb{align-items:center;justify-content:center;z-index:70}
+#lb img{max-width:92%;max-height:80%;border-radius:20px}
+.hr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.hr label{margin:0;flex:1;display:flex;align-items:center;gap:8px;color:var(--cream);font-size:.9rem}
+.hr input[type=checkbox]{width:18px;height:18px;accent-color:var(--or)}
+.hr input[type=time]{width:92px;padding:9px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="screen on" id="splash"><img class="t" data-i="icon" alt=""><img class="w" data-i="word" alt="biko"><p>Campo Mourão</p></div>
+
+<div class="screen" id="home">
+<div class="top"><img data-i="icon" alt="Biko"><div class="loc"><small>Você está em</small><br><b>Campo Mourão, PR</b></div>
+<button class="ib" id="fbtn" aria-label="Filtros"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button></div>
+<div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Cortar grama, pintor, eletricista..." aria-label="Buscar serviço"></div>
+<div class="chips" id="chips"></div>
+<div class="scroll" id="list"></div>
+</div>
+
+<div class="screen" id="cats">
+<div class="top"><div class="loc"><b style="font-size:1.4rem">Serviços</b><br><small>Escolha o que você precisa</small></div></div>
+<div class="scroll"><div class="grid" id="catgrid"></div></div>
+</div>
+
+<div class="screen" id="ad">
+<div class="top"><div class="loc"><b style="font-size:1.4rem">Anunciar no Biko</b><br><small>Seja encontrado por quem está perto</small></div></div>
+<div class="scroll">
+<div class="plan"><h3>Grátis</h3><ul><li>Perfil com seus serviços e fotos de trabalhos</li><li>Clientes chamam direto no seu WhatsApp</li></ul></div>
+<div class="plan hl"><h3>Destaque</h3><ul><li>Aparece no topo da lista</li><li>Selo Destaque no seu perfil</li></ul><button class="btn ye" style="margin-top:14px;width:100%" id="dest">Quero ser destaque</button></div>
+<h2 style="margin-top:20px">Criar meu perfil grátis</h2>
+<label for="a-n">Seu nome</label><input class="f" id="a-n" autocomplete="name">
+<label for="a-s">Serviço que você faz</label><select class="f" id="a-s"></select>
+<label for="a-b">Bairro</label><select class="f" id="a-b"></select>
+<label for="a-w">WhatsApp com DDD</label><input class="f" id="a-w" inputmode="tel" placeholder="44 99999-9999">
+<label>Horários em que você atende</label><div id="a-h"></div>
+<label for="a-f">Sua foto (opcional)</label><input class="f" type="file" accept="image/*" id="a-f">
+<button class="btn" style="width:100%;margin-top:18px" id="a-ok">Criar perfil</button>
+<div id="wk"></div>
+</div>
+</div>
+
+<div class="screen" id="det" style="z-index:10"></div>
+
+<nav class="tabs" id="tabs">
+<button data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+<button data-t="cats"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>Serviços</button>
+<button data-t="ad"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Anunciar</button>
+</nav>
+<div class="ov" id="lb"><img id="lbi" alt="Foto ampliada"></div>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+/* Logos: troque os dois valores abaixo pelos seus PNGs em base64 se quiser */
+const svgURI=s=>"data:image/svg+xml,"+encodeURIComponent(s);
+const ICON=svgURI('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="#E95B23"/><text x="50" y="72" font-family="Nunito,Arial" font-weight="900" font-size="68" text-anchor="middle" fill="#FDF6E7">b</text></svg>');
+const WORD=svgURI('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 64"><text x="95" y="52" font-family="Nunito,Arial" font-weight="900" font-size="58" text-anchor="middle" fill="#EFB909">biko</text></svg>');
+document.querySelectorAll("[data-i]").forEach(i=>i.src=i.dataset.i==="icon"?ICON:WORD);
+document.getElementById("fav").href=ICON;
+
+const CATS=[["Corte de grama","🌱"],["Jardinagem","🌿"],["Limpeza","🧼"],["Diarista","🧹"],["Pintura","🎨"],["Pedreiro","🧱"],["Eletricista","💡"],["Encanador","🚰"],["Marceneiro","🪚"],["Mudanças","🚚"],["Reparos em geral","🔧"],["Montagem de móveis","🪑"]];
+const BAIRROS=["Centro","Jardim Lar Paraná","Jardim Tropical","Vila Urupês","Jardim Itália","Jardim Gralha Azul"];
+const BASE=[
+{id:1,nome:"Carlos Silva",cats:["Corte de grama","Jardinagem"],bairro:"Centro",desde:"2025-03-10",dest:1,on:1,wpp:"5544999990001",bio:"Mais de 10 anos cuidando de jardins e gramados em Campo Mourão. Levo meu próprio equipamento.",sv:[["Corte de grama (até 200 m²)",70],["Terreno grande",150],["Poda e jardinagem",100]]},
+{id:2,nome:"Maria das Graças",cats:["Diarista","Limpeza"],bairro:"Jardim Lar Paraná",desde:"2025-08-22",dest:1,on:1,wpp:"5544999990002",bio:"Limpeza residencial e pós-obra com capricho. Dias fixos ou diárias avulsas.",sv:[["Diária de limpeza (8h)",150],["Limpeza pós-obra",250]]},
+{id:3,nome:"João Pedro Almeida",cats:["Pintura","Reparos em geral"],bairro:"Jardim Tropical",desde:"2024-11-05",dest:0,on:0,wpp:"5544999990003",bio:"Pintor residencial e comercial. Também faço reboco e massa corrida.",sv:[["Pintura de cômodo",350],["Casa completa (orçamento)",1500],["Massa corrida",200]]},
+{id:4,nome:"Roberto Machado",cats:["Eletricista"],bairro:"Vila Urupês",desde:"2025-01-18",dest:0,on:1,wpp:"5544999990004",bio:"Tomadas, chuveiros, ventiladores e quadros de energia. Atendo emergências.",sv:[["Instalação de chuveiro",100],["Troca de tomada (por ponto)",40],["Visita técnica",80]]},
+{id:5,nome:"Anderson Souza",cats:["Encanador","Reparos em geral"],bairro:"Jardim Itália",desde:"2025-06-02",dest:0,on:1,wpp:"5544999990005",bio:"Vazamentos, troca de torneiras, caixa d'água e desentupimento.",sv:[["Conserto de vazamento",90],["Desentupimento",120]]},
+{id:6,nome:"Edson Ferreira",cats:["Pedreiro"],bairro:"Jardim Gralha Azul",desde:"2024-09-14",dest:0,on:0,wpp:"5544999990006",bio:"Muros, calçadas, pisos e pequenas reformas. Orçamento sem compromisso.",sv:[["Diária de pedreiro",220],["Assentamento de piso (m²)",35]]},
+{id:7,nome:"Luciana Prado",cats:["Montagem de móveis"],bairro:"Centro",desde:"2026-02-01",dest:0,on:1,wpp:"5544999990007",bio:"Montagem de guarda-roupas, cozinhas e estantes. Pontual e cuidadosa.",sv:[["Guarda-roupa (até 6 portas)",150],["Móvel pequeno",60]]},
+{id:8,nome:"Marcos Vinícius",cats:["Mudanças"],bairro:"Jardim Lar Paraná",desde:"2025-10-30",dest:0,on:1,wpp:"5544999990008",bio:"Fretes e mudanças em Campo Mourão e região, com ajudantes.",sv:[["Frete pequeno",80],["Mudança residencial",400]]}];
+const AV0=[[1,"Fernanda L.",5,"Pontual e deixou o quintal impecável.",70,"2026-08-12"],[1,"Paulo R.",5,"Ótimo serviço, recomendo!",80,"2026-07-03"],[1,"Sandra M.",4,"Bom trabalho, só atrasou um pouco.",110,"2026-05-20"],[2,"Cláudia B.",5,"Casa cheirosa e organizada. Super confiável.",150,"2026-09-01"],[2,"Ricardo T.",5,"Faço limpeza com ela toda semana.",160,"2026-08-15"],[3,"Alice P.",4,"Pintura de dois quartos ficou ótima.",330,"2026-06-11"],[4,"Gustavo H.",5,"Resolveu o problema do quadro de luz rapidinho.",90,"2026-09-10"],[4,"Helena C.",4,"Educado e honesto no orçamento.",110,"2026-04-02"],[5,"Bruno A.",5,"Resolveu o vazamento no mesmo dia.",95,"2026-09-20"],[7,"Teresa G.",5,"Montou tudo em uma tarde.",150,"2026-09-14"],[8,"Daniel O.",4,"Cuidou bem dos móveis.",420,"2026-08-30"]].map(a=>({pid:a[0],autor:a[1],nota:a[2],texto:a[3],preco:a[4],data:a[5]}));
+const COR=["#EFB909","#E95B23","#f4d27a","#f08a5d","#9ad1c1","#c9b6f0"];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let S={avs:[],provs:[],den:[],fav:[],work:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("biko")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("biko",JSON.stringify(S))}catch(e){}};
+const provs=()=>BASE.concat(S.provs);
+const avsOf=id=>AV0.concat(S.avs).filter(a=>a.pid===id);
+const nota=id=>{const a=avsOf(id);return a.length?a.reduce((s,x)=>s+x.nota,0)/a.length:0};
+const tempo=d=>{const m=Math.max(1,Math.round((Date.now()-new Date(d))/2.63e9));return m<12?m+(m>1?" meses":" mês"):Math.floor(m/12)+(m<24?" ano":" anos")};
+
+/* ===== Horários de disponibilidade ===== */
+const DIAS=[["seg","Segunda"],["ter","Terça"],["qua","Quarta"],["qui","Quinta"],["sex","Sexta"],["sab","Sábado"],["dom","Domingo"]];
+const HOR0={seg:["07:00","18:00"],ter:["07:00","18:00"],qua:["07:00","18:00"],qui:["07:00","18:00"],sex:["07:00","18:00"],sab:["07:00","12:00"],dom:null};
+const horOf=p=>p.hor||HOR0;
+const horForm=(k,h)=>DIAS.map(([d,n])=>{const v=h[d];return `<div class="hr"><label><input type="checkbox" id="${k}-${d}"${v?" checked":""}>${n}</label><input type="time" class="f" id="${k}-${d}-a" value="${v?v[0]:"08:00"}"><span>às</span><input type="time" class="f" id="${k}-${d}-b" value="${v?v[1]:"18:00"}"></div>`}).join("");
+const horRead=k=>{const h={};DIAS.forEach(([d])=>{h[d]=$(`#${k}-${d}`).checked?[$(`#${k}-${d}-a`).value,$(`#${k}-${d}-b`).value]:null});return h};
+const horOk=h=>Object.values(h).every(v=>!v||(v[0]&&v[1]&&v[0]<v[1]))&&Object.values(h).some(Boolean);
+const aberto=p=>{const h=horOf(p)[["dom","seg","ter","qua","qui","sex","sab"][new Date().getDay()]];if(!h)return false;const t=new Date().toTimeString().slice(0,5);return t>=h[0]&&t<=h[1]};
+const horList=p=>(aberto(p)&&p.on?'<b style="color:var(--ok)">● Aberto agora</b>':'<b style="color:var(--mut)">● Fechado agora</b>')+DIAS.map(([d,n])=>{const v=horOf(p)[d];return `<div class="srv" style="padding:6px 0"><span>${n}</span>${v?`<b>${v[0]} – ${v[1]}</b>`:'<b style="color:var(--mut)">Indisponível</b>'}</div>`}).join("");
+
+const SK=["#f1c9a5","#e0a97c","#c68642","#8d5524","#f3d3b8","#d9a074"],HR=["#2b1d14","#4a2c17","#0f0f0f","#7a5230","#b8b2a8","#5b3a22"],SH=["#E95B23","#EFB909","#1c4357","#3fb67a","#8a6bd1","#d94b6a"],BG=["#143444","#1c4357","#244e63"],FEM=[2,7];
+function av(p,s){if(p.foto)return `<img class="ph" src="${p.foto}" style="width:${s}px;height:${s}px" alt="">`;const i=p.id,f=FEM.includes(i),sk=SK[i%6],hr=HR[(i*2)%6];
+return `<svg class="ph" viewBox="0 0 100 100" width="${s}" height="${s}" role="img" aria-label="${esc(p.nome)}"><rect width="100" height="100" fill="${BG[i%3]}"/>${f?`<path d="M28 46c-2-26 12-34 22-34s24 8 22 34c0 14 4 24 6 30H22c2-6 6-16 6-30z" fill="${hr}"/>`:""}<path d="M12 100c0-24 17-36 38-36s38 12 38 36z" fill="${SH[(i+1)%6]}"/><rect x="43" y="52" width="14" height="16" rx="6" fill="${sk}"/><ellipse cx="50" cy="40" rx="17" ry="20" fill="${sk}"/>${f?`<path d="M32 40c0-16 8-22 18-22s18 6 18 22c-6-6-10-14-18-14s-12 8-18 14z" fill="${hr}"/>`:`<path d="M32 38c-2-18 10-24 18-24s20 6 18 24c-4-8-10-12-18-12s-14 4-18 12z" fill="${hr}"/>`}<circle cx="43" cy="42" r="1.8" fill="#222"/><circle cx="57" cy="42" r="1.8" fill="#222"/><path d="M43 50q7 5 14 0" stroke="#7a3b2a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`}
+function pic(f,z=220){return new Promise(r=>{if(!f)return r();const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),m=Math.min(im.width,im.height);c.width=c.height=z;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);r(c.toDataURL("image/jpeg",.8))};im.onerror=()=>r();im.src=fr.result};fr.readAsDataURL(f)})}
+const HAB={1:["Roçadeira","Poda","Paisagismo","Limpeza de terrenos"],2:["Limpeza pesada","Organização","Passar roupa"],3:["Pintura interna","Pintura externa","Textura","Massa corrida"],4:["Instalações","Quadro de energia","Emergência"],5:["Vazamentos","Caixa d'água","Desentupimento"],6:["Alvenaria","Pisos","Reboco","Calçadas"],7:["Guarda-roupas","Cozinhas","Painéis de TV"],8:["Caminhão baú","Ajudantes","Embalagem"]};
+const I={flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',pin:'<path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',wpp:'<path d="M5 19l1.3-4A8 8 0 1 1 9 17.7z"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24">${I[n]}</svg>`;
+const scene=(e,a,b)=>"data:image/svg+xml,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="120" height="120" fill="url(#g)"/><text x="60" y="78" font-size="54" text-anchor="middle">${e}</text></svg>`);
+const WK={1:[["🌱","#3fb67a","#1f6f46","Quintal depois do corte"],["🌿","#6fcf97","#2a7d4f","Poda de cerca viva"]],2:[["🧼","#7fd1e8","#2a7a9a","Sala pós-obra"],["🧹","#f4d27a","#c98f12","Cozinha organizada"]],3:[["🎨","#f08a5d","#b8401a","Sala pintada"],["🖌️","#9ad1c1","#2f7d6a","Quarto em dois tons"]],4:[["💡","#f4d27a","#c98f12","Quadro de luz novo"],["🔌","#c9b6f0","#6a4fb3","Tomadas trocadas"]],5:[["🚰","#7fd1e8","#2a7a9a","Torneira trocada"],["🔧","#9fb3c0","#4a6578","Reparo de cano"]],6:[["🧱","#e0a97c","#9a5a2b","Muro novo"],["🏗️","#f4d27a","#c98f12","Piso assentado"]],7:[["🪑","#e0a97c","#9a5a2b","Guarda-roupa montado"],["📺","#9fb3c0","#4a6578","Painel de TV"]],8:[["🚚","#f08a5d","#b8401a","Mudança concluída"],["📦","#e0a97c","#9a5a2b","Embalagem de móveis"]]};
+AV0[0].fotos=[scene("🌱","#3fb67a","#1f6f46")];AV0[3].fotos=[scene("🧼","#7fd1e8","#2a7a9a")];AV0[5].fotos=[scene("🎨","#f08a5d","#b8401a"),scene("🖌️","#9ad1c1","#2f7d6a")];AV0[6].fotos=[scene("💡","#f4d27a","#c98f12")];
+const works=id=>(WK[id]||[]).map(x=>({img:scene(x[0],x[1],x[2]),leg:x[3]})).concat(S.work.filter(x=>x.pid===id));
+const zoom=s=>{$("#lbi").src=s;$("#lb").classList.add("on")};$("#lb").onclick=()=>$("#lb").classList.remove("on");
+
+function wk(){
+const e=$("#wk");if(!S.provs.length){e.innerHTML='<h2 style="margin-top:26px">Fotos e horários</h2><div class="empty">Crie seu perfil acima para postar fotos dos seus trabalhos e editar seus horários.</div>';return}
+const opts=S.provs.map(p=>`<option value="${p.id}">${esc(p.nome)}</option>`).join("");
+e.innerHTML=`<h2 style="margin-top:26px">Postar foto de trabalho</h2><label for="w-p">Seu perfil</label><select class="f" id="w-p">${opts}</select><label for="w-f">Foto</label><input class="f" type="file" accept="image/*" id="w-f"><label for="w-l">Legenda</label><input class="f" id="w-l" placeholder="Ex: Quintal depois do corte"><button class="btn" style="width:100%;margin-top:18px" id="w-ok">Postar foto</button>
+<h2 style="margin-top:26px">Meus horários</h2><label for="h-p">Perfil</label><select class="f" id="h-p">${opts}</select><div id="h-f" style="margin-top:12px"></div><button class="btn" style="width:100%;margin-top:10px" id="h-ok">Salvar horários</button>`;
+$("#w-ok").onclick=async()=>{const img=await pic($("#w-f").files[0],560);if(!img)return toast("Escolha uma foto do seu trabalho");S.work.push({pid:+$("#w-p").value,img,leg:$("#w-l").value.trim()||"Trabalho realizado",data:Date.now()});save();wk();toast("Foto postada no seu perfil")};
+const carregaH=()=>{const p=S.provs.find(x=>x.id==$("#h-p").value);$("#h-f").innerHTML=horForm("h",horOf(p))};
+$("#h-p").onchange=carregaH;carregaH();
+$("#h-ok").onclick=()=>{const h=horRead("h");if(!horOk(h))return toast("Marque ao menos um dia e use horário final maior que o inicial");S.provs.find(x=>x.id==$("#h-p").value).hor=h;save();list();toast("Horários salvos")}}
+
+const F={q:"",cat:"",bairro:"",min:0,agora:false};
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2400)}
+function tab(t){$$(".screen:not(#splash)").forEach(s=>s.classList.toggle("on",s.id===t));$$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));$("#tabs").style.display="flex"}
+function chips(){$("#chips").innerHTML=`<button class="chip${F.agora?" on":""}" data-a="1">🟢 Disponível agora</button>`+[["","Todos"]].concat(CATS.map(c=>[c[0],c[1]+" "+c[0]])).map(c=>`<button class="chip${F.cat===c[0]?" on":""}" data-c="${esc(c[0])}">${esc(c[1])}</button>`).join("")}
+function list(){
+const q=F.q.toLowerCase();
+const r=provs().filter(p=>(!F.cat||p.cats.includes(F.cat))&&(!F.bairro||p.bairro===F.bairro)&&nota(p.id)>=F.min&&(!F.agora||(p.on&&aberto(p)))&&(!q||(p.nome+p.cats.join(" ")+p.sv.map(s=>s[0]).join(" ")).toLowerCase().includes(q)))
+.sort((a,b)=>b.dest-a.dest||b.on-a.on||nota(b.id)-nota(a.id));
+$("#list").innerHTML=`<h2>${F.cat||"Prestadores"}<small>${r.length} ${r.length===1?"encontrado":"encontrados"}</small></h2>`+(r.length?r.map(p=>{const n=nota(p.id),c=avsOf(p.id).length;return `<button class="row${p.dest?" dest":""}" data-p="${p.id}"><div class="av">${av(p,58)}</div><div class="info"><div class="nm">${esc(p.nome)}${p.dest?'<span class="tag">Destaque</span>':""}</div><div class="sv">${esc(p.cats.join(" · "))} — ${esc(p.bairro)}</div><div class="meta"><span><span class="star">★</span> ${n?n.toFixed(1):"Novo"}${c?` <span class="off">(${c})</span>`:""}</span>${!p.on?'<span class="off">Sem agenda</span>':aberto(p)?'<span class="on-t">● Aberto agora</span>':'<span class="off">Fechado agora</span>'}</div></div></button>`}).join(""):`<div class="empty"><b>Ninguém por aqui ainda</b>Tente outro serviço ou bairro, ou limpe os filtros.</div>`)}
+function detail(id){
+const p=provs().find(x=>x.id===id),a=avsOf(id).sort((x,y)=>y.data.localeCompare(x.data)),n=nota(id),fav=S.fav.includes(id),d=$("#det");
+const w=works(id),cnt=k=>a.filter(x=>x.nota===k).length;
+d.innerHTML=`<div class="topr"><button class="ib" id="bk" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span></span><button class="ib" id="rp2" aria-label="Denunciar perfil">${ic("flag")}</button></div>
+<div class="scroll"><div class="hero"><div class="av" style="width:104px;height:104px;border-radius:34px;margin:0 auto 12px">${av(p,104)}</div><h1>${esc(p.nome)}</h1><p>${esc(p.cats.join(" · "))}</p>${p.dest?'<span class="tag" style="display:inline-block;margin-top:8px">Destaque</span>':""}${p.on?'<p style="color:var(--ok);margin-top:6px">● Disponível para novos serviços</p>':'<p style="margin-top:6px">● Agenda cheia no momento</p>'}</div>
+<div class="acts"><button class="act st" id="rv"><i>${ic("star")}</i>Avaliar</button><button class="act${fav?" on":""}" id="fv"><i>${ic("heart")}</i>${fav?"Salvo":"Salvar"}</button><button class="act rd" id="rp"><i>${ic("flag")}</i>Denunciar</button></div>
+<div class="stats"><div><b><span class="star">★</span> ${n?n.toFixed(1):"Novo"}</b><small>${a.length} avaliações</small></div><div><b>${tempo(p.desde)}</b><small>no Biko</small></div></div>
+<h2>Sobre</h2><p class="bio">${esc(p.bio)}</p>
+<div class="sk">${(HAB[p.id]||p.cats).map(h=>`<span>${esc(h)}</span>`).join("")}</div>
+<h2>Informações</h2><div class="inf"><div class="ic">${ic("pin")}</div><div><small>Bairro</small>${esc(p.bairro)}, Campo Mourão</div></div>
+<div class="inf" style="align-items:flex-start"><div class="ic">${ic("clock")}</div><div style="flex:1"><small>Horários de atendimento</small>${horList(p)}</div></div>
+<div class="inf"><div class="ic">${ic("cash")}</div><div><small>Pagamento</small>Combinado direto com o prestador</div></div><div class="inf"><div class="ic">${ic("chat")}</div><div><small>Contato</small>Pelo WhatsApp, fora do app</div></div>
+<h2 style="margin-top:22px">Trabalhos realizados<small>fotos postadas por ${esc(p.nome.split(" ")[0])}</small></h2>${w.length?`<div class="gal">${w.map(x=>`<figure><img src="${x.img}" alt="${esc(x.leg)}"><figcaption>${esc(x.leg)}</figcaption></figure>`).join("")}</div>`:'<div class="empty">Ainda sem fotos de trabalhos.</div>'}<h2 style="margin-top:22px">Serviços</h2>${p.sv.map(s=>`<div class="srv"><span>${esc(s[0])}</span></div>`).join("")}
+<h2 style="margin-top:22px">Avaliações<small>${a.length} no total</small></h2>
+<div class="sum"><div class="big"><b>${n?n.toFixed(1):"—"}</b><span class="star">${"★".repeat(Math.round(n))}</span><br><small>${a.length} avaliações</small></div><div class="dist">${[5,4,3,2,1].map(k=>`<div>${k}★<i><u style="width:${a.length?cnt(k)/a.length*100:0}%"></u></i>${cnt(k)}</div>`).join("")}</div></div>
+${a.length?a.map(v=>`<div class="rev"><div class="h"><span class="who"><span class="av" style="background:${COR[v.autor.length%6]}!important;display:grid;place-items:center;color:var(--navy);font-weight:900">${esc(v.autor[0])}</span><span>${esc(v.autor)}<br><small>${v.data.split("-").reverse().join("/")}</small></span></span><span class="star">${"★".repeat(v.nota)}</span></div>${esc(v.texto)}${v.fotos&&v.fotos.length?`<div class="shots">${v.fotos.map(f=>`<img src="${f}" alt="Foto do serviço">`).join("")}</div>`:""}</div>`).join(""):'<div class="empty"><b>Ainda sem avaliações</b>Contratou? Seja o primeiro a avaliar.</div>'}
+<button class="btn sec" style="width:100%;margin-top:14px" id="rv2">Escrever avaliação</button></div>
+<div class="bar"><button class="btn" id="wp">${ic("wpp")}Chamar no WhatsApp</button></div>`;
+d.classList.add("on");$("#tabs").style.display="none";
+$("#bk").onclick=()=>{d.classList.remove("on");$("#tabs").style.display="flex"};
+$("#wp").onclick=()=>window.open("https://wa.me/"+p.wpp+"?text="+encodeURIComponent("Olá "+p.nome.split(" ")[0]+", te encontrei no Biko. Você faz "+p.cats[0].toLowerCase()+"?"),"_blank");
+$("#rv").onclick=$("#rv2").onclick=()=>review(p);$("#rp").onclick=$("#rp2").onclick=()=>report(p);
+d.onclick=e=>{if(e.target.matches(".shots img,.gal img"))zoom(e.target.src)};$("#fv").onclick=()=>{S.fav=fav?S.fav.filter(x=>x!==id):S.fav.concat(id);save();detail(id);toast(fav?"Removido dos salvos":"Prestador salvo")}}
+function sheet(h){$("#sheet").innerHTML=h;$("#ov").classList.add("on")}
+const closeSheet=()=>$("#ov").classList.remove("on");
+function review(p){let st=0;
+sheet(`<h3>Avaliar ${esc(p.nome)}</h3><div class="stars" id="st">${[1,2,3,4,5].map(i=>`<button data-s="${i}" aria-label="${i} estrelas">★</button>`).join("")}</div>
+<label for="r-f">Fotos do serviço (opcional, até 3)</label><input class="f" type="file" accept="image/*" multiple id="r-f"><label for="r-t">Como foi?</label><textarea class="f" id="r-t"></textarea>
+<button class="btn" style="width:100%;margin-top:18px" id="r-ok">Enviar avaliação</button>`);
+$("#st").onclick=e=>{const b=e.target.closest("button");if(!b)return;st=+b.dataset.s;$$("#st button").forEach((x,i)=>x.classList.toggle("on",i<st))};
+$("#r-ok").onclick=async()=>{const fotos=[];for(const f of[...$("#r-f").files].slice(0,3)){const x=await pic(f,480);x&&fotos.push(x)}const t=$("#r-t").value.trim();if(!st||!t)return toast("Escolha as estrelas e conte como foi");
+S.avs.push({fotos,pid:p.id,autor:"Você",nota:st,texto:t,data:new Date().toISOString().slice(0,10)});save();closeSheet();detail(p.id);list();toast("Avaliação publicada")}}
+function report(p){
+sheet(`<h3>Denunciar ${esc(p.nome)}</h3><label for="d-m">Motivo</label><select class="f" id="d-m"><option>Golpe ou cobrança indevida</option><option>Perfil falso</option><option>Serviço mal feito</option><option>Comportamento inadequado</option></select>
+<label for="d-t">Detalhes</label><textarea class="f" id="d-t"></textarea><button class="btn" style="width:100%;margin-top:18px" id="d-ok">Enviar denúncia</button>`);
+$("#d-ok").onclick=()=>{S.den.push({pid:p.id,motivo:$("#d-m").value,texto:$("#d-t").value,data:Date.now()});save();closeSheet();toast("Denúncia enviada para análise")}}
+function filtros(){
+sheet(`<h3>Filtros</h3><label for="x-b">Bairro</label><select class="f" id="x-b"><option value="">Todos os bairros</option>${BAIRROS.map(b=>`<option${F.bairro===b?" selected":""}>${b}</option>`).join("")}</select>
+<label for="x-n">Avaliação mínima</label><select class="f" id="x-n">${[[0,"Qualquer nota"],[4,"4,0 ou mais"],[4.5,"4,5 ou mais"]].map(o=>`<option value="${o[0]}"${F.min===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>
+<div style="display:flex;gap:10px;margin-top:18px"><button class="btn sec" id="x-c">Limpar</button><button class="btn" id="x-ok" style="flex:2">Ver resultados</button></div>`);
+$("#x-c").onclick=()=>{F.bairro="";F.min=0;closeSheet();list()};$("#x-ok").onclick=()=>{F.bairro=$("#x-b").value;F.min=+$("#x-n").value;closeSheet();list()}}
+$("#fbtn").onclick=filtros;$("#ov").onclick=e=>{if(e.target.id==="ov")closeSheet()};
+$("#q").oninput=e=>{F.q=e.target.value;list()};
+$("#chips").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.a){F.agora=!F.agora}else F.cat=b.dataset.c;chips();list()};
+$("#list").onclick=e=>{const b=e.target.closest("[data-p]");if(b)detail(+b.dataset.p)};
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(b)tab(b.dataset.t)};
+$("#catgrid").innerHTML=CATS.map(c=>`<button class="cat" data-c="${c[0]}"><span>${c[1]}</span>${c[0]}<small>${provs().filter(p=>p.cats.includes(c[0])).length} prestadores</small></button>`).join("");
+$("#catgrid").onclick=e=>{const b=e.target.closest("button");if(!b)return;F.cat=b.dataset.c;chips();list();tab("home")};
+$("#a-h").innerHTML=horForm("a",HOR0);
+$("#a-s").innerHTML=CATS.map(c=>`<option>${c[0]}</option>`).join("");$("#a-b").innerHTML=BAIRROS.map(b=>`<option>${b}</option>`).join("");
+$("#dest").onclick=()=>toast("Em breve: fale com a equipe do Biko para entrar no topo");
+$("#a-ok").onclick=async()=>{
+const foto=await pic($("#a-f").files[0]);const n=$("#a-n").value.trim(),w=$("#a-w").value.replace(/\D/g,"");if(!n||w.length<10)return toast("Preencha seu nome e um WhatsApp com DDD");
+const hor=horRead("a");if(!horOk(hor))return toast("Marque ao menos um dia e use horário final maior que o inicial");
+const s=$("#a-s").value;S.provs.push({hor,foto,id:100+S.provs.length,nome:n,cats:[s],bairro:$("#a-b").value,desde:new Date().toISOString().slice(0,10),dest:0,on:1,wpp:"55"+w,bio:"Atendo em Campo Mourão. Chame no WhatsApp para combinar valor e horário.",sv:[[s,0]]});save();
+$("#a-n").value=$("#a-w").value=$("#a-f").value="";$("#a-h").innerHTML=horForm("a",HOR0);wk();list();tab("home");toast("Perfil criado! Você já aparece na lista")};
+chips();list();wk();$$(".screen:not(#splash)").forEach(s=>s.classList.remove("on"));$("#tabs").style.display="none";
+setTimeout(()=>{tab("home");$("#splash").style.opacity=0;setTimeout(()=>$("#splash").style.display="none",500)},1700);
+</script>
+</body>
+</html>
