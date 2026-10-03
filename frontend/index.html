@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biko | Serviços em Campo Mourão</title>
+    <meta name="description"
+        content="Encontre quem corta grama, pinta, limpa, conserta e muito mais em Campo Mourão - PR.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="#/" class="logo" aria-label="Biko - início">bi<span>ko</span><small>.com</small></a>
+        <div class="nav-links">
+            <a href="#/buscar">Encontrar prestadores</a>
+            <a href="#/" data-scroll="como-funciona">Como funciona</a>
+            <a href="#/anunciar">Planos</a>
+        </div>
+        <div class="nav-actions">
+            <a href="#/anunciar" class="btn btn-primary">Anunciar meu serviço</a>
+        </div>
+    </nav>
+
+    <div class="toast-container" id="toasts"></div>
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+
+        <section class="hero">
+            <div class="hero-badge">📍 Campo Mourão - PR</div>
+            <h1>O <span>biko</span> que você precisa,<br>pertinho de você</h1>
+            <p>Corte de grama, limpeza, pintura, reparos e muito mais. Veja avaliações, preço médio e chame direto no
+                WhatsApp.</p>
+
+            <div class="hero-search">
+                <span class="hs-icon">🔍</span>
+                <input type="text" id="hero-input" placeholder="Ex: cortar grama, pintor, eletricista..."
+                    onkeydown="if(event.key==='Enter') doSearch()">
+                <select id="hero-bairro" aria-label="Bairro"></select>
+                <button class="btn btn-primary" onclick="doSearch()">Buscar</button>
+            </div>
+
+            <div class="hero-tags" id="hero-tags"></div>
+
+            <div class="hero-stats">
+                <div class="hero-stat"><strong id="st-prest">0</strong><span>Prestadores</span></div>
+                <div class="hero-stat"><strong id="st-av">0</strong><span>Avaliações</span></div>
+                <div class="hero-stat"><strong>100%</strong><span>Contato direto</span></div>
+                <div class="hero-stat"><strong>0%</strong><span>Comissão</span></div>
+            </div>
+        </section>
+
+        <section class="section section-alt">
+            <div class="section-title">
+                <h2>Explore por <span class="accent">serviço</span></h2>
+                <p>Escolha o serviço e veja quem atende em Campo Mourão</p>
+            </div>
+            <div class="cats-grid" id="cats-grid"></div>
+        </section>
+
+        <section class="section">
+            <div class="section-title">
+                <h2>⭐ Prestadores em <span class="accent">destaque</span></h2>
+                <p>Profissionais que aparecem primeiro na busca</p>
+            </div>
+            <div class="cards-grid" id="home-destaques"></div>
+            <div class="center-btn">
+                <a href="#/buscar" class="btn btn-outline btn-lg">Ver todos os prestadores →</a>
+            </div>
+        </section>
+
+        <section class="section section-alt">
+            <div class="section-title">
+                <h2>Busque por <span class="accent">bairro</span></h2>
+                <p>Quanto mais perto, mais rápido o atendimento</p>
+            </div>
+            <div class="bairros-wrap" id="bairros-wrap"></div>
+        </section>
+
+        <section class="section" id="como-funciona">
+            <div class="section-title">
+                <h2>Como <span class="accent">funciona</span></h2>
+                <p>Simples e direto, igual a indicação de vizinho, só que organizada</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Escolha o serviço</h3>
+                    <p>Use a busca ou clique em uma categoria para ver quem faz o que você precisa.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Compare os perfis</h3>
+                    <p>Veja nota, quantidade de avaliações, tempo de cadastro e preço médio praticado.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Chame no WhatsApp</h3>
+                    <p>Combine valor, dia e horário direto com o prestador. Sem intermediário.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <h3>Avalie o serviço</h3>
+                    <p>Conte como foi e quanto pagou. Isso ajuda toda a vizinhança a escolher melhor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-band">
+            <h2>Você presta serviços? 🔧</h2>
+            <p>Cadastre-se grátis, seja encontrado por quem procura e receba clientes pelo seu WhatsApp.</p>
+            <a href="#/anunciar" class="btn btn-lg btn-white">Anunciar meu serviço</a>
+        </section>
+    </div>
+
+    <!-- BUSCA -->
+    <div class="page" id="page-search">
+        <section class="section" style="padding-top:28px">
+            <div class="section-title left">
+                <h2>Encontrar <span class="accent">prestadores</span></h2>
+            </div>
+            <div class="search-layout">
+                <aside class="filter-sidebar">
+                    <h3>🔧 Filtros</h3>
+                    <div class="filter-group">
+                        <label for="f-q">Buscar</label>
+                        <input type="text" id="f-q" class="field" placeholder="Nome ou serviço">
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-cat">Serviço</label>
+                        <select id="f-cat" class="field"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-bairro">Bairro</label>
+                        <select id="f-bairro" class="field"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-preco">Preço médio máximo</label>
+                        <input type="range" id="f-preco" min="50" max="1000" step="10" value="1000">
+                        <div class="price-display" id="price-val">Qualquer preço</div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-nota">Avaliação mínima</label>
+                        <select id="f-nota" class="field">
+                            <option value="0">Qualquer avaliação</option>
+                            <option value="4">⭐ 4.0+</option>
+                            <option value="4.5">⭐ 4.5+</option>
+                            <option value="5">⭐ 5.0 apenas</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="check"><input type="checkbox" id="f-disp"> Disponível hoje</label>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="applyFilters()">Aplicar filtros</button>
+                    <button class="btn btn-outline btn-block" style="margin-top:8px" onclick="resetFilters()">Limpar
+                        filtros</button>
+                </aside>
+
+                <div>
+                    <div class="results-head">
+                        <span id="results-count"></span>
+                        <select id="f-sort" class="field field-sm" onchange="applyFilters()" aria-label="Ordenar">
+                            <option value="relevance">Mais relevantes</option>
+                            <option value="rating">Melhor avaliados</option>
+                            <option value="reviews">Mais avaliações</option>
+                            <option value="price-asc">Menor preço</option>
+                            <option value="newest">Cadastro mais antigo</option>
+                        </select>
+                    </div>
+                    <p class="hint-line">Prestadores com plano <b>Destaque</b> aparecem primeiro em qualquer ordenação.
+                    </p>
+                    <div class="cards-grid" id="search-grid"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="page" id="page-profile">
+        <div class="profile-page" id="profile-root"></div>
+    </div>
+
+    <!-- ANUNCIAR -->
+    <div class="page" id="page-anunciar">
+        <section class="section" style="padding-top:28px">
+            <div class="section-title">
+                <h2>Anuncie seu serviço no <span class="accent">Biko</span></h2>
+                <p>Cadastro gratuito. Quer aparecer no topo? Escolha o plano Destaque.</p>
+            </div>
+
+            <div class="plans">
+                <div class="plan">
+                    <h3>Gratuito</h3>
+                    <div class="big">R$ 0</div>
+                    <ul>
+                        <li>Perfil com seus serviços e preços</li>
+                        <li>Contato direto pelo WhatsApp</li>
+                        <li>Receba avaliações dos clientes</li>
+                        <li>Sem comissão</li>
+                    </ul>
+                    <a href="#form-cadastro" class="btn btn-primary btn-block" data-scroll="form-cadastro">Cadastrar
+                        grátis</a>
+                </div>
+                <div class="plan pro">
+                    <span class="plan-flag">MAIS PROCURADO</span>
+                    <h3>Destaque ★</h3>
+                    <div class="big">R$ 29<small>/mês</small></div>
+                    <ul>
+                        <li>Tudo do plano gratuito</li>
+                        <li>Aparece no topo da busca</li>
+                        <li>Selo "Em destaque"</li>
+                        <li>Vitrine na página inicial</li>
+                    </ul>
+                    <button class="btn btn-secondary btn-block"
+                        onclick="showToast('Pagamento do plano Destaque será liberado em breve.', 'warning')">Quero ser
+                        destaque</button>
+                </div>
+            </div>
+
+            <div class="form-box" id="form-cadastro">
+                <h3>📝 Cadastre seu perfil</h3>
+                <form id="form-prest" novalidate>
+                    <div class="form-row">
+                        <div class="form-group"><label for="c-nome">Seu nome</label><input class="field" id="c-nome"
+                                maxlength="50" placeholder="Ex: José da Silva"></div>
+                        <div class="form-group"><label for="c-whats">WhatsApp (com DDD)</label><input class="field"
+                                id="c-whats" inputmode="numeric" maxlength="15" placeholder="(44) 99999-9999"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="c-cat">Serviço principal</label><select class="field"
+                                id="c-cat"></select></div>
+                        <div class="form-group"><label for="c-bairro">Bairro</label><select class="field"
+                                id="c-bairro"></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="c-preco">Preço a partir de (R$)</label><input class="field"
+                                id="c-preco" type="number" min="0" placeholder="Ex: 80"></div>
+                        <div class="form-group"><label for="c-svc">Descrição do serviço</label><input class="field"
+                                id="c-svc" maxlength="80" placeholder="Ex: Corte de grama em terrenos e quintais"></div>
+                    </div>
+                    <div class="form-group"><label for="c-bio">Sobre você</label><textarea class="field" id="c-bio"
+                            rows="3" maxlength="300"
+                            placeholder="Fale da sua experiência, equipamentos, regiões que atende..."></textarea></div>
+                    <button class="btn btn-primary btn-lg" type="submit">Criar meu perfil</button>
+                    <p class="hint-line" style="margin-top:10px">Nesta versão de demonstração o perfil fica salvo apenas
+                        neste navegador.</p>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#/" class="logo" style="color:#fff">bi<span>ko</span><small>.com</small></a>
+                <p>Os serviços do dia a dia de Campo Mourão num só lugar. Antes era de boca em boca, agora é só
+                    procurar.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Para clientes</h4>
+                <a href="#/buscar">Encontrar prestadores</a>
+                <a href="#/" data-scroll="como-funciona">Como funciona</a>
+            </div>
+            <div class="footer-col">
+                <h4>Para prestadores</h4>
+                <a href="#/anunciar">Cadastrar meu serviço</a>
+                <a href="#/anunciar">Plano Destaque</a>
+            </div>
+            <div class="footer-col" id="footer-cats">
+                <h4>Serviços</h4>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Biko · Campo Mourão, PR</span>
+            <span class="footer-note">O Biko apenas conecta pessoas. Valores, prazos e pagamento são combinados
+                diretamente entre cliente e prestador.</span>
+        </div>
+    </footer>
+
+    <div id="modal-root"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>
