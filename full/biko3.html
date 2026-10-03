@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0D222D">
+    <title>Biko | Serviços em Campo Mourão</title>
+    <link rel="icon" id="fav">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0D222D;
+            --navy2: #143444;
+            --navy3: #1c4357;
+            --or: #E95B23;
+            --ye: #EFB909;
+            --cream: #FDF6E7;
+            --mut: #8fa6b3;
+            --line: rgba(253, 246, 231, .1);
+            --red: #e8554e;
+            --ok: #3fb67a
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            font-family: Nunito, system-ui, sans-serif;
+            background: #071017;
+            color: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit
+        }
+
+        button {
+            cursor: pointer;
+            border: 0;
+            background: none
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--ye);
+            outline-offset: 2px
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            max-width: 430px;
+            height: 100dvh;
+            background: var(--navy);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column
+        }
+
+        @media(min-width:500px) {
+            #app {
+                height: min(880px, 96dvh);
+                border-radius: 38px;
+                box-shadow: 0 0 0 8px #14303f, 0 30px 80px #000a
+            }
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            background: var(--navy)
+        }
+
+        .screen.on {
+            display: flex
+        }
+
+        .scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 24px;
+            scrollbar-width: none
+        }
+
+        .scroll::-webkit-scrollbar {
+            display: none
+        }
+
+        #splash {
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            z-index: 50;
+            transition: opacity .5s
+        }
+
+        #splash img.t {
+            width: 150px;
+            animation: pop .7s cubic-bezier(.2, 1.4, .4, 1)
+        }
+
+        #splash img.w {
+            width: 170px;
+            animation: pop .7s .15s both cubic-bezier(.2, 1.4, .4, 1)
+        }
+
+        #splash p {
+            color: var(--mut);
+            font-weight: 700;
+            font-size: .9rem
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: scale(.7) translateY(14px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 12px
+        }
+
+        .top img {
+            width: 46px;
+            height: auto;
+            flex: none
+        }
+
+        .top .loc {
+            flex: 1;
+            line-height: 1.15
+        }
+
+        .top .loc small {
+            color: var(--mut);
+            font-weight: 700;
+            font-size: .74rem
+        }
+
+        .top .loc b {
+            font-size: 1.08rem;
+            font-weight: 900
+        }
+
+        .ib {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--navy2);
+            display: grid;
+            place-items: center;
+            flex: none
+        }
+
+        .ib svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--cream);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--navy2);
+            border-radius: 18px;
+            padding: 0 16px;
+            margin: 4px 20px 14px;
+            height: 52px
+        }
+
+        .search svg {
+            width: 20px;
+            stroke: var(--mut);
+            fill: none;
+            stroke-width: 2;
+            flex: none
+        }
+
+        .search input {
+            flex: 1;
+            background: none;
+            border: 0;
+            outline: 0;
+            font-weight: 600;
+            min-width: 0
+        }
+
+        .search input::placeholder {
+            color: var(--mut)
+        }
+
+        .chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 0 20px 16px;
+            scrollbar-width: none
+        }
+
+        .chips::-webkit-scrollbar {
+            display: none
+        }
+
+        .chip {
+            flex: none;
+            padding: 9px 15px;
+            border-radius: 99px;
+            background: var(--navy2);
+            font-weight: 800;
+            font-size: .88rem;
+            white-space: nowrap
+        }
+
+        .chip.on {
+            background: var(--or)
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            margin: 4px 0 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline
+        }
+
+        h2 small {
+            color: var(--mut);
+            font-weight: 700;
+            font-size: .8rem
+        }
+
+        .row {
+            display: flex;
+            gap: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            background: var(--navy2);
+            border-radius: 20px;
+            text-align: left;
+            width: 100%
+        }
+
+        .row.dest {
+            box-shadow: inset 4px 0 0 var(--ye)
+        }
+
+        .av {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 1.3rem;
+            flex: none;
+            color: var(--navy);
+            overflow: hidden;
+            background: none !important
+        }
+
+        .ph {
+            display: block;
+            border-radius: inherit;
+            object-fit: cover
+        }
+
+        .row .info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .row .nm {
+            font-weight: 900;
+            font-size: 1.02rem;
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .row .sv {
+            color: var(--mut);
+            font-size: .84rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 7px;
+            font-size: .84rem;
+            font-weight: 800;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .star {
+            color: var(--ye)
+        }
+
+        .tag {
+            background: var(--ye);
+            color: var(--navy);
+            font-size: .68rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 99px
+        }
+
+        .off {
+            color: var(--mut);
+            font-weight: 700
+        }
+
+        .on-t {
+            color: var(--ok);
+            font-weight: 800
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--mut);
+            padding: 40px 20px;
+            font-weight: 700
+        }
+
+        .empty b {
+            display: block;
+            color: var(--cream);
+            font-size: 1.05rem;
+            margin-bottom: 6px
+        }
+
+        nav.tabs {
+            display: flex;
+            background: var(--navy2);
+            padding: 8px 10px calc(env(safe-area-inset-bottom, 0px) + 8px);
+            border-top: 1px solid var(--line);
+            flex: none
+        }
+
+        nav.tabs button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 6px;
+            font-size: .72rem;
+            font-weight: 800;
+            color: var(--mut)
+        }
+
+        nav.tabs svg {
+            width: 23px;
+            height: 23px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        nav.tabs button.on {
+            color: var(--or)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .cat {
+            background: var(--navy2);
+            border-radius: 20px;
+            padding: 18px 14px;
+            text-align: left;
+            font-weight: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .cat span {
+            font-size: 1.9rem
+        }
+
+        .cat small {
+            color: var(--mut);
+            font-weight: 700
+        }
+
+        .hero {
+            text-align: center;
+            padding: 6px 0 18px
+        }
+
+        .hero h1 {
+            font-size: 1.45rem;
+            font-weight: 900
+        }
+
+        .hero p {
+            color: var(--mut);
+            font-weight: 700;
+            font-size: .9rem
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            background: var(--navy2);
+            border-radius: 20px;
+            padding: 14px 4px;
+            margin-bottom: 18px
+        }
+
+        .stats div {
+            text-align: center;
+            border-left: 1px solid var(--line)
+        }
+
+        .stats div:first-child {
+            border: 0
+        }
+
+        .stats b {
+            display: block;
+            font-size: 1.12rem;
+            font-weight: 900
+        }
+
+        .stats small {
+            color: var(--mut);
+            font-weight: 700;
+            font-size: .74rem
+        }
+
+        .bio {
+            color: #d6dde0;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 18px
+        }
+
+        .srv {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--line);
+            font-weight: 700
+        }
+
+        .srv b {
+            color: var(--ye);
+            white-space: nowrap
+        }
+
+        .rev {
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--line);
+            font-weight: 600;
+            font-size: .92rem
+        }
+
+        .rev .h {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 900;
+            margin-bottom: 3px
+        }
+
+        .rev small {
+            color: var(--mut);
+            font-weight: 700
+        }
+
+        .rev .who {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .rev .who .av {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px
+        }
+
+        .bar {
+            padding: 12px 20px calc(env(safe-area-inset-bottom, 0px) + 14px);
+            background: var(--navy);
+            border-top: 1px solid var(--line);
+            display: flex;
+            gap: 10px;
+            flex: none
+        }
+
+        .btn {
+            flex: 1;
+            background: var(--or);
+            color: #fff;
+            font-weight: 900;
+            border-radius: 18px;
+            padding: 15px;
+            font-size: 1rem;
+            transition: transform .1s
+        }
+
+        .btn:active {
+            transform: scale(.97)
+        }
+
+        .btn.sec {
+            background: var(--navy2)
+        }
+
+        .btn.ye {
+            background: var(--ye);
+            color: var(--navy)
+        }
+
+        .bar .btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            vertical-align: -4px;
+            margin-right: 6px
+        }
+
+        .ov {
+            position: absolute;
+            inset: 0;
+            background: #000a;
+            z-index: 20;
+            display: none;
+            align-items: flex-end
+        }
+
+        .ov.on {
+            display: flex
+        }
+
+        .sheet {
+            width: 100%;
+            background: var(--navy2);
+            border-radius: 28px 28px 0 0;
+            padding: 10px 20px calc(env(safe-area-inset-bottom, 0px) + 22px);
+            max-height: 88%;
+            overflow-y: auto;
+            animation: up .25s ease-out
+        }
+
+        @keyframes up {
+            from {
+                transform: translateY(60px);
+                opacity: .4
+            }
+
+            to {
+                transform: none;
+                opacity: 1
+            }
+        }
+
+        .sheet:before {
+            content: "";
+            display: block;
+            width: 44px;
+            height: 5px;
+            border-radius: 9px;
+            background: var(--line);
+            margin: 0 auto 14px
+        }
+
+        .sheet h3 {
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-bottom: 14px
+        }
+
+        label {
+            display: block;
+            font-weight: 800;
+            font-size: .84rem;
+            color: var(--mut);
+            margin: 12px 0 6px
+        }
+
+        .f {
+            width: 100%;
+            background: var(--navy);
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            padding: 13px 14px;
+            font-weight: 600;
+            outline: 0
+        }
+
+        .f:focus {
+            border-color: var(--or)
+        }
+
+        textarea.f {
+            min-height: 84px;
+            resize: none
+        }
+
+        .stars {
+            display: flex;
+            gap: 6px
+        }
+
+        .stars button {
+            font-size: 2rem;
+            color: var(--navy3);
+            line-height: 1
+        }
+
+        .stars button.on {
+            color: var(--ye)
+        }
+
+        .plan {
+            border-radius: 22px;
+            padding: 18px;
+            margin-bottom: 12px;
+            background: var(--navy2)
+        }
+
+        .plan.hl {
+            background: linear-gradient(135deg, var(--or), #c9430f)
+        }
+
+        .plan h3 {
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-bottom: 6px
+        }
+
+        .plan li {
+            margin: 6px 0 0 18px;
+            font-weight: 700;
+            font-size: .92rem
+        }
+
+        .toast {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: 96px;
+            background: var(--cream);
+            color: var(--navy);
+            font-weight: 800;
+            padding: 13px 16px;
+            border-radius: 16px;
+            z-index: 60;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: .25s;
+            pointer-events: none;
+            text-align: center
+        }
+
+        .toast.on {
+            transform: none;
+            opacity: 1
+        }
+
+        .topr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: calc(env(safe-area-inset-top, 0px) + 14px) 20px 8px;
+            font-weight: 900
+        }
+
+        .topr span {
+            flex: 1
+        }
+
+        .acts {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            margin-bottom: 18px
+        }
+
+        .act {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: .76rem;
+            font-weight: 800;
+            color: var(--mut);
+            width: 68px
+        }
+
+        .act i {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--navy2);
+            display: grid;
+            place-items: center
+        }
+
+        .act svg,
+        .ic svg {
+            width: 21px;
+            height: 21px;
+            stroke: var(--cream);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .act.rd i {
+            background: #3a1f26
+        }
+
+        .act.rd svg {
+            stroke: var(--red)
+        }
+
+        .act.rd {
+            color: #f08a85
+        }
+
+        .act.on i {
+            background: var(--or)
+        }
+
+        .act.on svg {
+            fill: #fff
+        }
+
+        .act.st i {
+            background: #3a3112
+        }
+
+        .act.st svg {
+            stroke: var(--ye)
+        }
+
+        .inf {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 11px 0;
+            border-bottom: 1px dashed var(--line);
+            font-weight: 700;
+            font-size: .92rem
+        }
+
+        .inf .ic {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--navy2);
+            display: grid;
+            place-items: center;
+            flex: none
+        }
+
+        .inf small {
+            display: block;
+            color: var(--mut);
+            font-size: .74rem
+        }
+
+        .sk {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px
+        }
+
+        .sk span {
+            background: var(--navy2);
+            padding: 7px 13px;
+            border-radius: 99px;
+            font-weight: 800;
+            font-size: .84rem
+        }
+
+        .sum {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            background: var(--navy2);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 6px
+        }
+
+        .sum .big {
+            text-align: center
+        }
+
+        .sum .big b {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            display: block
+        }
+
+        .sum .big small {
+            color: var(--mut);
+            font-weight: 700
+        }
+
+        .dist {
+            flex: 1;
+            display: grid;
+            gap: 5px
+        }
+
+        .dist div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .76rem;
+            font-weight: 800
+        }
+
+        .dist i {
+            flex: 1;
+            height: 7px;
+            border-radius: 9px;
+            background: var(--navy);
+            overflow: hidden
+        }
+
+        .dist i u {
+            display: block;
+            height: 100%;
+            background: var(--ye)
+        }
+
+        .shots {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px
+        }
+
+        .shots img {
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+            border-radius: 14px;
+            cursor: zoom-in
+        }
+
+        .gal {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 6px
+        }
+
+        .gal figure {
+            margin: 0
+        }
+
+        .gal img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 18px;
+            display: block;
+            cursor: zoom-in
+        }
+
+        .gal figcaption {
+            font-size: .78rem;
+            font-weight: 700;
+            color: var(--mut);
+            margin-top: 5px
+        }
+
+        #lb {
+            align-items: center;
+            justify-content: center;
+            z-index: 70
+        }
+
+        #lb img {
+            max-width: 92%;
+            max-height: 80%;
+            border-radius: 20px
+        }
+
+        .hr {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px
+        }
+
+        .hr label {
+            margin: 0;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--cream);
+            font-size: .9rem
+        }
+
+        .hr input[type=checkbox] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--or)
+        }
+
+        .hr input[type=time] {
+            width: 92px;
+            padding: 9px
+        }
+
+        .seg{display:flex;background:var(--navy2);border-radius:16px;padding:4px;margin-bottom:6px}
+        .seg button{flex:1;padding:11px;border-radius:12px;font-weight:900;color:var(--mut)}
+        .seg button.on{background:var(--or);color:#fff}
+        .tipo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .tipo button{background:var(--navy2);border:2px solid transparent;border-radius:18px;padding:14px 10px;text-align:center;font-weight:900;display:flex;flex-direction:column;gap:4px;align-items:center}
+        .tipo button span{font-size:1.7rem}
+        .tipo button small{color:var(--mut);font-weight:700;font-size:.74rem}
+        .tipo button.on{border-color:var(--or);background:#3a2418}
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important
+            }
+        }
+
+        /* --- ajustes: selo de filtros ativos --- */
+        .ib {
+            position: relative
+        }
+
+        .bd {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 5px;
+            border-radius: 10px;
+            background: var(--or);
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 900;
+            place-items: center
+        }
+
+        .bd.on {
+            display: grid
+        }
+
+        /* --- correção: a barra de abas ficava escondida atrás das telas (no topo); agora fixa no rodapé --- */
+        nav.tabs {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 12
+        }
+
+        .screen:not(#det) .scroll {
+            padding-bottom: 104px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="screen on" id="splash"><img class="t" data-i="icon" alt=""><img class="w" data-i="word" alt="biko">
+            <p>Campo Mourão</p>
+        </div>
+
+        <div class="screen" id="home">
+            <div class="top"><img data-i="icon" alt="Biko">
+                <div class="loc"><small>Você está em</small><br><b>Campo Mourão, PR</b></div>
+                <button class="ib" id="fbtn" aria-label="Filtros"><svg viewBox="0 0 24 24">
+                        <path d="M4 6h16M7 12h10M10 18h4" />
+                    </svg><span class="bd" id="fbd"></span></button>
+            </div>
+            <div class="search"><svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="m20 20-3.5-3.5" />
+                </svg><input id="q" placeholder="Cortar grama, pintor, eletricista..." aria-label="Buscar serviço">
+            </div>
+            <div class="chips" id="chips"></div>
+            <div class="scroll" id="list"></div>
+        </div>
+
+        <div class="screen" id="cats">
+            <div class="top">
+                <div class="loc"><b style="font-size:1.4rem">Serviços</b><br><small>Escolha o que você precisa</small>
+                </div>
+            </div>
+            <div class="scroll">
+                <div class="grid" id="catgrid"></div>
+            </div>
+        </div>
+
+        <div class="screen" id="saved">
+            <div class="top">
+                <div class="loc"><b style="font-size:1.4rem">Salvos</b><br><small>Os prestadores que você
+                        guardou</small>
+                </div>
+            </div>
+            <div class="scroll" id="savedl"></div>
+        </div>
+
+        <div class="screen" id="me">
+            <div id="meh"></div>
+            <div class="scroll" id="mel"></div>
+        </div>
+
+        <div class="screen" id="det" style="z-index:10"></div>
+
+        <nav class="tabs" id="tabs">
+            <button data-t="home" class="on"><svg viewBox="0 0 24 24">
+                    <path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
+                </svg>Início</button>
+            <button data-t="cats"><svg viewBox="0 0 24 24">
+                    <rect x="4" y="4" width="6.5" height="6.5" rx="2" />
+                    <rect x="13.5" y="4" width="6.5" height="6.5" rx="2" />
+                    <rect x="4" y="13.5" width="6.5" height="6.5" rx="2" />
+                    <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2" />
+                </svg>Serviços</button>
+            <button data-t="saved"><svg viewBox="0 0 24 24">
+                    <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+                </svg>Salvos</button>
+            <button data-t="me"></button>
+        </nav>
+        <div class="ov" id="lb"><img id="lbi" alt="Foto ampliada"></div>
+        <div class="ov" id="ov">
+            <div class="sheet" id="sheet"></div>
+        </div>
+        <div class="toast" id="toast"></div>
+    </div>
+    <script>
+        /* Logos: ICON = tucano do Biko (PNG em base64). WORD = nome "biko" (pode trocar por PNG em base64 se quiser) */
+        const svgURI = s => "data:image/svg+xml," + encodeURIComponent(s);
+        const ICON = "data:image/png;base64,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";
+        const WORD = svgURI('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 64"><text x="95" y="52" font-family="Nunito,Arial" font-weight="900" font-size="58" text-anchor="middle" fill="#EFB909">biko</text></svg>');
+        document.querySelectorAll("[data-i]").forEach(i => i.src = i.dataset.i === "icon" ? ICON : WORD);
+        document.getElementById("fav").href = ICON;
+
+        const CATS = [["Corte de grama", "🌱"], ["Jardinagem", "🌿"], ["Limpeza", "🧼"], ["Diarista", "🧹"], ["Pintura", "🎨"], ["Pedreiro", "🧱"], ["Eletricista", "💡"], ["Encanador", "🚰"], ["Marceneiro", "🪚"], ["Mudanças", "🚚"], ["Reparos em geral", "🔧"], ["Montagem de móveis", "🪑"]];
+        const BAIRROS = ["Centro", "Jardim Lar Paraná", "Jardim Tropical", "Vila Urupês", "Jardim Itália", "Jardim Gralha Azul"];
+        /* horários prontos para os novos prestadores */
+        const H24 = () => { const o = {};["seg", "ter", "qua", "qui", "sex", "sab", "dom"].forEach(d => o[d] = ["00:00", "23:59"]); return o };
+        const HH = (a, b, sab, dom) => ({ seg: [a, b], ter: [a, b], qua: [a, b], qui: [a, b], sex: [a, b], sab: sab || null, dom: dom || null });
+        const BASE = [
+            { id: 1, nome: "Carlos Silva", cats: ["Corte de grama", "Jardinagem"], bairro: "Centro", desde: "2025-03-10", dest: 1, on: 1, wpp: "5544999990001", bio: "Mais de 10 anos cuidando de jardins e gramados em Campo Mourão. Levo meu próprio equipamento.", sv: [["Corte de grama (até 200 m²)", 70], ["Terreno grande", 150], ["Poda e jardinagem", 100]] },
+            { id: 2, nome: "Maria das Graças", cats: ["Diarista", "Limpeza"], bairro: "Jardim Lar Paraná", desde: "2025-08-22", dest: 1, on: 1, wpp: "5544999990002", bio: "Limpeza residencial e pós-obra com capricho. Dias fixos ou diárias avulsas.", sv: [["Diária de limpeza (8h)", 150], ["Limpeza pós-obra", 250]] },
+            { id: 3, nome: "João Pedro Almeida", cats: ["Pintura", "Reparos em geral"], bairro: "Jardim Tropical", desde: "2024-11-05", dest: 0, on: 0, wpp: "5544999990003", bio: "Pintor residencial e comercial. Também faço reboco e massa corrida.", sv: [["Pintura de cômodo", 350], ["Casa completa (orçamento)", 1500], ["Massa corrida", 200]] },
+            { id: 4, nome: "Roberto Machado", cats: ["Eletricista"], bairro: "Vila Urupês", desde: "2025-01-18", dest: 0, on: 1, wpp: "5544999990004", bio: "Tomadas, chuveiros, ventiladores e quadros de energia. Atendo emergências.", sv: [["Instalação de chuveiro", 100], ["Troca de tomada (por ponto)", 40], ["Visita técnica", 80]] },
+            { id: 5, nome: "Anderson Souza", cats: ["Encanador", "Reparos em geral"], bairro: "Jardim Itália", desde: "2025-06-02", dest: 0, on: 1, wpp: "5544999990005", bio: "Vazamentos, troca de torneiras, caixa d'água e desentupimento.", sv: [["Conserto de vazamento", 90], ["Desentupimento", 120]] },
+            { id: 6, nome: "Edson Ferreira", cats: ["Pedreiro"], bairro: "Jardim Gralha Azul", desde: "2024-09-14", dest: 0, on: 0, wpp: "5544999990006", bio: "Muros, calçadas, pisos e pequenas reformas. Orçamento sem compromisso.", sv: [["Diária de pedreiro", 220], ["Assentamento de piso (m²)", 35]] },
+            { id: 7, nome: "Luciana Prado", cats: ["Montagem de móveis"], bairro: "Centro", desde: "2026-02-01", dest: 0, on: 1, wpp: "5544999990007", bio: "Montagem de guarda-roupas, cozinhas e estantes. Pontual e cuidadosa.", sv: [["Guarda-roupa (até 6 portas)", 150], ["Móvel pequeno", 60]] },
+            { id: 8, nome: "Marcos Vinícius", cats: ["Mudanças"], bairro: "Jardim Lar Paraná", desde: "2025-10-30", dest: 0, on: 1, wpp: "5544999990008", bio: "Fretes e mudanças em Campo Mourão e região, com ajudantes.", sv: [["Frete pequeno", 80], ["Mudança residencial", 400]] },
+            { id: 9, nome: "Tiago Moreira", cats: ["Corte de grama", "Jardinagem"], bairro: "Jardim Tropical", desde: "2025-04-12", dest: 0, on: 1, wpp: "5544999990009", bio: "Corte de grama, limpeza de terrenos e manutenção de jardins. Atendo casas e comércios.", sv: [["Corte de grama (quintal)", 60], ["Limpeza de terreno", 180], ["Manutenção mensal de jardim", 120]] },
+            { id: 10, nome: "Josiane Lima", cats: ["Limpeza", "Diarista"], bairro: "Vila Urupês", desde: "2025-02-20", dest: 0, on: 1, wpp: "5544999990010", bio: "Faxina completa de casas e apartamentos, com produtos próprios se preferir.", sv: [["Faxina residencial", 140], ["Limpeza de apartamento", 120]] },
+            { id: 11, nome: "Fábio Nogueira", cats: ["Pintura"], bairro: "Centro", desde: "2024-10-08", dest: 1, on: 1, wpp: "5544999990011", bio: "Pintura residencial e predial com acabamento fino. Orçamento grátis e sem compromisso.", sv: [["Pintura de cômodo", 380], ["Pintura de fachada", 1200], ["Aplicação de textura", 250]] },
+            { id: 12, nome: "Rogério Batista", cats: ["Marceneiro"], bairro: "Jardim Itália", desde: "2024-08-30", dest: 0, on: 1, wpp: "5544999990012", bio: "Móveis sob medida, consertos e portas de madeira. Mais de 15 anos de bancada.", sv: [["Armário sob medida (mão de obra)", 900], ["Conserto de móveis", 120], ["Porta e janela de madeira", 300]] },
+            { id: 13, nome: "Cleusa Andrade", cats: ["Diarista"], bairro: "Jardim Gralha Azul", desde: "2025-05-14", dest: 0, on: 1, wpp: "5544999990013", bio: "Diarista de confiança, com referências de clientes fixos há anos.", sv: [["Diária de diarista", 140], ["Passar roupa (por hora)", 20]] },
+            { id: 14, nome: "Wellington Cruz", cats: ["Eletricista", "Reparos em geral"], bairro: "Jardim Lar Paraná", desde: "2025-03-03", dest: 0, on: 1, wpp: "5544999990014", hor: H24(), bio: "Plantão elétrico 24 horas, todos os dias. Falta de energia, curto e disjuntor que cai.", sv: [["Plantão elétrico 24h", 120], ["Instalação de ventilador", 90], ["Revisão de quadro de luz", 200]] },
+            { id: 15, nome: "Priscila Duarte", cats: ["Montagem de móveis"], bairro: "Jardim Tropical", desde: "2025-07-19", dest: 0, on: 1, wpp: "5544999990015", bio: "Monto guarda-roupas, cozinhas e racks com cuidado e sem sobrar parafuso.", sv: [["Guarda-roupa (até 6 portas)", 140], ["Cozinha modulada", 250], ["Móvel pequeno", 60]] },
+            { id: 16, nome: "Valdir Pereira", cats: ["Pedreiro"], bairro: "Vila Urupês", desde: "2024-12-02", dest: 0, on: 1, wpp: "5544999990016", bio: "Calçadas, muros e reboco. Trabalho limpo e dentro do prazo.", sv: [["Diária de pedreiro", 230], ["Calçada (m²)", 45], ["Reboco (m²)", 30]] },
+            { id: 17, nome: "Ana Paula Ribeiro", cats: ["Limpeza"], bairro: "Centro", desde: "2025-01-09", dest: 1, on: 1, wpp: "5544999990017", bio: "Equipe de limpeza residencial e pós-obra. Atendimento rápido e produtos de qualidade.", sv: [["Limpeza residencial", 170], ["Limpeza pós-obra", 300], ["Limpeza de vidros", 120]] },
+            { id: 18, nome: "Gilmar Santos", cats: ["Encanador"], bairro: "Jardim Itália", desde: "2025-02-11", dest: 0, on: 1, wpp: "5544999990018", hor: H24(), bio: "Plantão hidráulico 24 horas. Vazamentos, entupimentos e caixa d'água.", sv: [["Plantão hidráulico 24h", 120], ["Troca de torneira", 70], ["Limpeza de caixa d'água", 150]] },
+            { id: 19, nome: "Samuel Rocha", cats: ["Mudanças"], bairro: "Jardim Gralha Azul", desde: "2025-06-25", dest: 0, on: 1, wpp: "5544999990019", hor: HH("06:00", "20:00", ["06:00", "20:00"], ["08:00", "16:00"]), bio: "Caminhão baú, ajudantes e proteção para os móveis. Atendo inclusive fim de semana.", sv: [["Frete pequeno", 90], ["Mudança residencial", 420], ["Montagem pós-mudança", 150]] },
+            { id: 20, nome: "Eliane Martins", cats: ["Diarista", "Limpeza"], bairro: "Jardim Lar Paraná", desde: "2025-09-04", dest: 0, on: 1, wpp: "5544999990020", hor: { seg: null, ter: null, qua: null, qui: null, sex: ["12:00", "22:00"], sab: ["07:00", "19:00"], dom: ["07:00", "19:00"] }, bio: "Faxina de sexta à noite e fim de semana, para quem trabalha a semana toda.", sv: [["Diária de fim de semana", 150], ["Faxina pesada", 200]] },
+            { id: 21, nome: "Cláudio Vieira", cats: ["Marceneiro", "Reparos em geral"], bairro: "Centro", desde: "2024-09-22", dest: 1, on: 1, wpp: "5544999990021", bio: "Marcenaria fina: planejados, decks e restauro de móveis antigos.", sv: [["Móveis planejados (m linear)", 450], ["Reforma de móveis", 200], ["Deck de madeira (m²)", 120]] },
+            { id: 22, nome: "Renato Alves", cats: ["Jardinagem", "Corte de grama"], bairro: "Jardim Itália", desde: "2025-08-01", dest: 0, on: 1, wpp: "5544999990022", hor: HH("07:00", "17:00", ["07:00", "17:00"], ["07:00", "12:00"]), bio: "Poda de árvores, paisagismo e corte de grama. Levo tudo para o descarte.", sv: [["Poda de árvores", 200], ["Corte de grama", 70], ["Plantio e paisagismo", 250]] },
+            { id: 23, nome: "Débora Fonseca", cats: ["Limpeza"], bairro: "Jardim Tropical", desde: "2025-11-10", dest: 0, on: 1, wpp: "5544999990023", hor: HH("13:00", "22:00", ["13:00", "22:00"], null), bio: "Limpeza à tarde e à noite, ideal para quem só chega em casa mais tarde.", sv: [["Limpeza noturna", 130], ["Limpeza de apartamento", 120]] },
+            { id: 24, nome: "Leandro Gomes", cats: ["Reparos em geral", "Montagem de móveis"], bairro: "Vila Urupês", desde: "2025-04-28", dest: 0, on: 1, wpp: "5544999990024", hor: HH("08:00", "22:00", ["08:00", "22:00"], ["09:00", "18:00"]), bio: "Faz-tudo: chuveiro, torneira, prateleira, quadro, fechadura. Atendo até de noite.", sv: [["Chuveiro e torneira", 100], ["Prateleiras e quadros", 70], ["Reparo geral (hora)", 50]] },
+            { id: 25, nome: "Márcia Teixeira", cats: ["Diarista", "Limpeza"], bairro: "Jardim Gralha Azul", desde: "2025-03-17", dest: 0, on: 1, wpp: "5544999990025", bio: "Diárias e limpeza de fim de obra. Cuidado com os móveis e com a sua casa.", sv: [["Diária de diarista", 150], ["Limpeza de fim de obra", 250]] },
+            { id: 26, nome: "Osvaldo Pinheiro", cats: ["Pedreiro", "Reparos em geral"], bairro: "Jardim Lar Paraná", desde: "2024-10-19", dest: 0, on: 1, wpp: "5544999990026", bio: "Reformas de banheiro, muros e ampliações. Material e mão de obra.", sv: [["Reforma de banheiro", 1500], ["Muro (m²)", 70], ["Diária de pedreiro", 230]] },
+            { id: 27, nome: "Thiago Barros", cats: ["Eletricista"], bairro: "Jardim Gralha Azul", desde: "2025-05-26", dest: 0, on: 1, wpp: "5544999990027", hor: HH("06:00", "23:00", ["06:00", "23:00"], ["08:00", "20:00"]), bio: "Instalação de ar-condicionado, luminárias e fiação de cômodos. Serviço com garantia.", sv: [["Instalação de ar-condicionado", 250], ["Troca de fiação (ponto)", 50], ["Instalação de luminárias", 80]] },
+            { id: 28, nome: "Simone Araújo", cats: ["Pintura", "Reparos em geral"], bairro: "Centro", desde: "2025-02-05", dest: 0, on: 0, wpp: "5544999990028", bio: "Pintura de portões, grades e ambientes internos. Também trato infiltração.", sv: [["Pintura de portão e grades", 300], ["Pintura de cômodo", 350], ["Reparo de infiltração", 250]] },
+            { id: 29, nome: "Heitor Campos", cats: ["Corte de grama"], bairro: "Vila Urupês", desde: "2025-09-12", dest: 0, on: 1, wpp: "5544999990029", hor: { seg: null, ter: null, qua: null, qui: null, sex: null, sab: ["06:00", "18:00"], dom: ["06:00", "18:00"] }, bio: "Corte de grama aos sábados e domingos, com roçadeira e acabamento.", sv: [["Corte de grama (até 300 m²)", 70], ["Terreno grande", 180]] },
+            { id: 30, nome: "Nair Cardoso", cats: ["Diarista"], bairro: "Jardim Itália", desde: "2024-11-27", dest: 0, on: 1, wpp: "5544999990030", bio: "Mais de 20 anos de experiência cuidando de casas de família.", sv: [["Diária de diarista", 140], ["Cuidar de roupas", 90]] },
+            { id: 31, nome: "Jonas Ferraz", cats: ["Mudanças", "Reparos em geral"], bairro: "Centro", desde: "2025-07-07", dest: 0, on: 1, wpp: "5544999990031", hor: HH("06:00", "22:00", ["06:00", "22:00"], ["06:00", "22:00"]), bio: "Fretes e mudanças todos os dias, com montagem e desmontagem de móveis.", sv: [["Frete pequeno", 90], ["Mudança completa", 480], ["Montagem de móveis", 120]] },
+            { id: 32, nome: "Patrícia Mendes", cats: ["Montagem de móveis", "Marceneiro"], bairro: "Jardim Lar Paraná", desde: "2025-10-02", dest: 0, on: 1, wpp: "5544999990032", bio: "Montagem de cozinhas planejadas e ajustes de marcenaria.", sv: [["Cozinha planejada (montagem)", 400], ["Guarda-roupa", 150], ["Painel de TV", 100]] },
+            { id: 33, nome: "Adriano Lopes", cats: ["Encanador", "Reparos em geral"], bairro: "Jardim Tropical", desde: "2025-04-05", dest: 0, on: 1, wpp: "5544999990033", hor: HH("07:00", "21:00", ["07:00", "21:00"], ["08:00", "18:00"]), bio: "Hidráulica residencial: registros, vasos, torneiras e desentupimento.", sv: [["Troca de torneira/registro", 90], ["Desentupimento", 130], ["Instalação de vaso", 160]] },
+            { id: 34, nome: "Kátia Medeiros", cats: ["Limpeza", "Diarista"], bairro: "Jardim Tropical", desde: "2024-12-15", dest: 1, on: 1, wpp: "5544999990034", bio: "Limpeza residencial e comercial, com higienização de sofás e colchões.", sv: [["Limpeza residencial", 190], ["Limpeza comercial", 250], ["Higienização de sofá", 160]] },
+            { id: 35, nome: "Evandro Dias", cats: ["Pedreiro"], bairro: "Jardim Itália", desde: "2025-01-30", dest: 0, on: 0, wpp: "5544999990035", bio: "Pisos, azulejos e acabamentos. Agenda cheia por enquanto, mas aceita encomendas futuras.", sv: [["Assentamento de piso (m²)", 38], ["Diária de pedreiro", 220]] },
+            { id: 36, nome: "Lúcia Bernardes", cats: ["Jardinagem"], bairro: "Centro", desde: "2025-06-14", dest: 0, on: 1, wpp: "5544999990036", bio: "Paisagismo, hortas caseiras e manutenção de jardins residenciais.", sv: [["Paisagismo", 250], ["Manutenção de jardim", 120], ["Horta caseira", 180]] },
+            { id: 37, nome: "Sérgio Matos", cats: ["Eletricista", "Reparos em geral"], bairro: "Vila Urupês", desde: "2024-09-09", dest: 0, on: 1, wpp: "5544999990037", hor: HH("07:00", "19:00", ["07:00", "13:00"], null), bio: "Eletricista com NR-10. Fiação completa, quadros e laudos simples.", sv: [["Fiação de cômodo", 350], ["Instalação de chuveiro", 100], ["Troca de disjuntor", 80]] },
+            { id: 38, nome: "Bianca Freitas", cats: ["Pintura"], bairro: "Jardim Lar Paraná", desde: "2025-08-18", dest: 0, on: 1, wpp: "5544999990038", bio: "Pintura de apartamentos e salas comerciais, com textura e grafiato.", sv: [["Pintura de apartamento", 900], ["Pintura de cômodo", 360], ["Textura e grafiato", 300]] },
+            { id: 39, nome: "Nelson Oliveira", cats: ["Corte de grama", "Jardinagem"], bairro: "Jardim Gralha Azul", desde: "2026-09-02", dest: 0, on: 1, wpp: "5544999990039", bio: "Acabei de entrar no Biko! Corte de grama, poda de cerca viva e limpeza de lotes.", sv: [["Corte de grama", 60], ["Poda de cerca viva", 120], ["Limpeza de lote", 200]] },
+            { id: 40, nome: "Camila Rezende", cats: ["Montagem de móveis", "Reparos em geral"], bairro: "Jardim Itália", desde: "2026-09-15", dest: 0, on: 1, wpp: "5544999990040", bio: "Novidade por aqui: monto móveis pequenos, penduro quadros e faço reparos rápidos.", sv: [["Montagem de cômoda e criado", 80], ["Pendurar quadros e prateleiras", 60], ["Reparos rápidos", 70]] }];
+        const AV0 = [[1, "Fernanda L.", 5, "Pontual e deixou o quintal impecável.", 70, "2026-08-12"], [1, "Paulo R.", 5, "Ótimo serviço, recomendo!", 80, "2026-07-03"], [1, "Sandra M.", 4, "Bom trabalho, só atrasou um pouco.", 110, "2026-05-20"], [2, "Cláudia B.", 5, "Casa cheirosa e organizada. Super confiável.", 150, "2026-09-01"], [2, "Ricardo T.", 5, "Faço limpeza com ela toda semana.", 160, "2026-08-15"], [3, "Alice P.", 4, "Pintura de dois quartos ficou ótima.", 330, "2026-06-11"], [4, "Gustavo H.", 5, "Resolveu o problema do quadro de luz rapidinho.", 90, "2026-09-10"], [4, "Helena C.", 4, "Educado e honesto no orçamento.", 110, "2026-04-02"], [5, "Bruno A.", 5, "Resolveu o vazamento no mesmo dia.", 95, "2026-09-20"], [7, "Teresa G.", 5, "Montou tudo em uma tarde.", 150, "2026-09-14"], [8, "Daniel O.", 4, "Cuidou bem dos móveis.", 420, "2026-08-30"],
+        [9, "Marta Q.", 5, "Deixou o gramado lindo e levou todo o lixo.", 65, "2026-09-12"], [9, "Vinícius P.", 4, "Bom custo-benefício.", 60, "2026-08-02"],
+        [10, "Rosana F.", 5, "Muito caprichosa, minha casa ficou brilhando.", 140, "2026-09-18"], [10, "Carlos E.", 5, "Pontual e honesta.", 150, "2026-07-27"], [10, "Luana S.", 4, "Fez uma ótima limpeza de apartamento.", 130, "2026-06-09"],
+        [11, "Henrique B.", 5, "Pintou a sala e os quartos sem sujar nada.", 420, "2026-09-08"], [11, "Jussara L.", 5, "Acabamento perfeito, super recomendo.", 380, "2026-08-19"], [11, "Marcelo D.", 4, "Cumpriu o prazo combinado.", 360, "2026-06-30"], [11, "Aline T.", 5, "Ótimo profissional, preço justo.", 400, "2026-05-14"],
+        [12, "Dona Ivone", 5, "Fez um armário de cozinha sob medida, ficou lindo.", 1200, "2026-09-02"], [12, "Murilo K.", 4, "Trabalho bonito, entregou uma semana depois do combinado.", 300, "2026-07-15"],
+        [13, "Sueli M.", 5, "Confio de olhos fechados, vem toda semana.", 140, "2026-09-25"], [13, "Paulo H.", 4, "Muito atenciosa.", 140, "2026-08-11"],
+        [14, "Igor V.", 5, "Veio de madrugada resolver a falta de energia.", 180, "2026-09-27"], [14, "Natália C.", 5, "Rápido e explicou tudo que fez.", 120, "2026-09-05"], [14, "Edu R.", 4, "Chegou em meia hora.", 150, "2026-07-22"],
+        [15, "Simone G.", 5, "Montou meu guarda-roupa em 2 horas.", 140, "2026-09-16"], [15, "Rafael A.", 4, "Cuidadosa com os móveis.", 80, "2026-08-23"],
+        [16, "Odair S.", 4, "Fez a calçada da frente, ficou firme.", 900, "2026-07-30"], [16, "Cristina P.", 5, "Honesto e trabalhador.", 250, "2026-06-18"],
+        [17, "Beatriz V.", 5, "Equipe pontual e muito organizada.", 180, "2026-09-21"], [17, "Alexandre N.", 5, "Limpeza pós-obra impecável.", 320, "2026-09-03"], [17, "Fernanda R.", 4, "Gostei do atendimento.", 170, "2026-07-10"], [17, "Gustavo M.", 5, "Recomendo demais.", 175, "2026-05-26"],
+        [18, "Lorena D.", 5, "Resolveu o vazamento da pia no mesmo dia.", 110, "2026-09-14"], [18, "Matheus F.", 5, "O plantão salvou meu domingo.", 200, "2026-09-06"], [18, "Denise A.", 4, "Preço justo.", 95, "2026-08-01"],
+        [19, "Cíntia O.", 5, "Mudança tranquila, ninguém quebrou nada.", 450, "2026-09-09"], [19, "Rui J.", 4, "Ajudantes educados.", 380, "2026-07-17"],
+        [20, "Tatiane G.", 5, "Faz a diária no sábado e é excelente.", 150, "2026-09-27"], [20, "Jorge B.", 5, "Muito caprichosa.", 150, "2026-08-29"],
+        [21, "Eduardo L.", 5, "Fez uma bancada de madeira perfeita.", 1500, "2026-09-11"], [21, "Karina S.", 5, "Capricho nos detalhes e honestidade.", 800, "2026-08-05"], [21, "Amanda T.", 4, "Demorou um pouco, mas valeu a pena.", 600, "2026-06-21"],
+        [22, "Marcos E.", 5, "Podou todas as árvores do quintal.", 200, "2026-09-17"], [22, "Silvia R.", 4, "Bom trabalho e preço justo.", 110, "2026-08-08"],
+        [23, "Júlia W.", 5, "Veio à noite e deixou a casa impecável.", 130, "2026-09-23"], [23, "Ronaldo P.", 4, "Boa limpeza de apartamento.", 120, "2026-07-04"],
+        [24, "Vera C.", 5, "Trocou chuveiro, montou prateleiras, tudo no mesmo dia.", 180, "2026-09-19"], [24, "Danilo S.", 5, "Resolve de tudo um pouco.", 150, "2026-08-14"], [24, "Priscila N.", 4, "Atendeu rápido no domingo.", 130, "2026-07-26"],
+        [25, "Elaine T.", 5, "Muito educada e dedicada.", 150, "2026-09-13"], [25, "Wagner C.", 4, "Boa diarista.", 150, "2026-06-07"],
+        [26, "Luciano R.", 4, "Reforma do banheiro bem feita.", 1800, "2026-08-20"], [26, "Teresinha A.", 5, "Honesto e limpo no serviço.", 250, "2026-05-30"],
+        [27, "Giovana M.", 5, "Instalou o ar-condicionado direitinho.", 250, "2026-09-24"], [27, "Cauã P.", 5, "Rápido e honesto.", 100, "2026-09-01"],
+        [28, "Helder F.", 4, "Pintou o portão e as grades.", 300, "2026-07-12"], [28, "Regina Q.", 5, "Ficou muito bom.", 350, "2026-06-02"],
+        [29, "Ivan L.", 5, "Cortou o terreno inteiro em uma manhã.", 160, "2026-09-20"], [29, "Dilma S.", 4, "Pontual no sábado.", 70, "2026-08-16"],
+        [30, "Cássia B.", 5, "Trabalha com muito carinho.", 140, "2026-09-10"], [30, "Nilton D.", 5, "Casa sempre organizada.", 140, "2026-07-08"],
+        [31, "Fabiana K.", 5, "Frete rápido e cuidadoso.", 120, "2026-09-26"], [31, "André Z.", 4, "Fez a mudança de domingo sem problemas.", 500, "2026-09-07"],
+        [32, "Clarice H.", 5, "Montou a cozinha planejada toda.", 350, "2026-09-15"],
+        [33, "Raimundo T.", 5, "Trocou o registro e a torneira rapidinho.", 130, "2026-09-22"], [33, "Michele V.", 4, "Educado, preço bom.", 110, "2026-08-09"],
+        [34, "Lívia P.", 5, "Limpeza profissional, produtos de qualidade.", 190, "2026-09-28"], [34, "Otávio G.", 5, "Melhor diarista que já contratei.", 160, "2026-09-12"], [34, "Bruna L.", 5, "Super indico.", 170, "2026-08-03"],
+        [35, "Valéria D.", 4, "Fez o piso da varanda direitinho.", 700, "2026-06-25"],
+        [36, "Antônio C.", 5, "Plantou a horta e organizou o jardim.", 220, "2026-09-04"], [36, "Rita J.", 4, "Muito atenciosa.", 150, "2026-07-19"],
+        [37, "Felipe Y.", 5, "Refez toda a fiação da cozinha.", 600, "2026-09-09"], [37, "Mônica A.", 4, "Orçamento transparente.", 90, "2026-08-12"],
+        [38, "Leonardo B.", 5, "Textura e pintura impecáveis.", 520, "2026-09-17"]].map(a => ({ pid: a[0], autor: a[1], nota: a[2], texto: a[3], preco: a[4], data: a[5] }));
+        const COR = ["#EFB909", "#E95B23", "#f4d27a", "#f08a5d", "#9ad1c1", "#c9b6f0"];
+        const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        let S = { avs: [], provs: [], den: [], fav: [], work: [], users: [], me: null };
+        try { S = Object.assign(S, JSON.parse(localStorage.getItem("biko") || "{}")) } catch (e) { }
+        const save = () => { try { localStorage.setItem("biko", JSON.stringify(S)) } catch (e) { } };
+        const provs = () => BASE.concat(S.provs);
+        const avsOf = id => AV0.concat(S.avs).filter(a => a.pid === id);
+        const nota = id => { const a = avsOf(id); return a.length ? a.reduce((s, x) => s + x.nota, 0) / a.length : 0 };
+        const tempo = d => { const m = Math.max(1, Math.round((Date.now() - new Date(d)) / 2.63e9)); return m < 12 ? m + (m > 1 ? " meses" : " mês") : Math.floor(m / 12) + (m < 24 ? " ano" : " anos") };
+
+        /* ===== Horários de disponibilidade ===== */
+        const DIAS = [["seg", "Segunda"], ["ter", "Terça"], ["qua", "Quarta"], ["qui", "Quinta"], ["sex", "Sexta"], ["sab", "Sábado"], ["dom", "Domingo"]];
+        const HOR0 = { seg: ["07:00", "18:00"], ter: ["07:00", "18:00"], qua: ["07:00", "18:00"], qui: ["07:00", "18:00"], sex: ["07:00", "18:00"], sab: ["07:00", "12:00"], dom: null };
+        const horOf = p => p.hor || HOR0;
+        const horForm = (k, h) => DIAS.map(([d, n]) => { const v = h[d]; return `<div class="hr"><label><input type="checkbox" id="${k}-${d}"${v ? " checked" : ""}>${n}</label><input type="time" class="f" id="${k}-${d}-a" value="${v ? v[0] : "08:00"}"><span>às</span><input type="time" class="f" id="${k}-${d}-b" value="${v ? v[1] : "18:00"}"></div>` }).join("");
+        const horRead = k => { const h = {}; DIAS.forEach(([d]) => { h[d] = $(`#${k}-${d}`).checked ? [$(`#${k}-${d}-a`).value, $(`#${k}-${d}-b`).value] : null }); return h };
+        const horOk = h => Object.values(h).every(v => !v || (v[0] && v[1] && v[0] < v[1])) && Object.values(h).some(Boolean);
+        const aberto = p => { const h = horOf(p)[["dom", "seg", "ter", "qua", "qui", "sex", "sab"][new Date().getDay()]]; if (!h) return false; const t = new Date().toTimeString().slice(0, 5); return t >= h[0] && t <= h[1] };
+        /* texto "Abre hoje às 14:00 / Abre amanhã às 07:00 / Abre segunda às 07:00" para quem está fechado */
+        const proxAbertura = p => {
+            const h = horOf(p), keys = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"], now = new Date(), t = now.toTimeString().slice(0, 5);
+            for (let i = 0; i <= 7; i++) {
+                const k = keys[(now.getDay() + i) % 7], v = h[k]; if (!v) continue; if (i === 0 && t >= v[0]) continue;
+                return i === 0 ? "Abre hoje às " + v[0] : i === 1 ? "Abre amanhã às " + v[0] : "Abre " + DIAS.find(d => d[0] === k)[1].toLowerCase() + " às " + v[0]
+            }
+            return ""
+        };
+        const horList = p => (aberto(p) && p.on ? '<b style="color:var(--ok)">● Aberto agora</b>' : '<b style="color:var(--mut)">● Fechado agora</b>') + DIAS.map(([d, n]) => { const v = horOf(p)[d]; return `<div class="srv" style="padding:6px 0"><span>${n}</span>${v ? `<b>${v[0]} – ${v[1]}</b>` : '<b style="color:var(--mut)">Indisponível</b>'}</div>` }).join("");
+
+        const SK = ["#f1c9a5", "#e0a97c", "#c68642", "#8d5524", "#f3d3b8", "#d9a074"], HR = ["#2b1d14", "#4a2c17", "#0f0f0f", "#7a5230", "#b8b2a8", "#5b3a22"], SH = ["#E95B23", "#EFB909", "#1c4357", "#3fb67a", "#8a6bd1", "#d94b6a"], BG = ["#143444", "#1c4357", "#244e63"], FEM = [2, 7, 10, 13, 15, 17, 20, 23, 25, 28, 30, 32, 34, 36, 38, 40];
+        function av(p, s) {
+            if (p.foto) return `<img class="ph" src="${p.foto}" style="width:${s}px;height:${s}px" alt="">`; const i = p.id, f = FEM.includes(i), sk = SK[i % 6], hr = HR[(i * 2) % 6];
+            return `<svg class="ph" viewBox="0 0 100 100" width="${s}" height="${s}" role="img" aria-label="${esc(p.nome)}"><rect width="100" height="100" fill="${BG[i % 3]}"/>${f ? `<path d="M28 46c-2-26 12-34 22-34s24 8 22 34c0 14 4 24 6 30H22c2-6 6-16 6-30z" fill="${hr}"/>` : ""}<path d="M12 100c0-24 17-36 38-36s38 12 38 36z" fill="${SH[(i + 1) % 6]}"/><rect x="43" y="52" width="14" height="16" rx="6" fill="${sk}"/><ellipse cx="50" cy="40" rx="17" ry="20" fill="${sk}"/>${f ? `<path d="M32 40c0-16 8-22 18-22s18 6 18 22c-6-6-10-14-18-14s-12 8-18 14z" fill="${hr}"/>` : `<path d="M32 38c-2-18 10-24 18-24s20 6 18 24c-4-8-10-12-18-12s-14 4-18 12z" fill="${hr}"/>`}<circle cx="43" cy="42" r="1.8" fill="#222"/><circle cx="57" cy="42" r="1.8" fill="#222"/><path d="M43 50q7 5 14 0" stroke="#7a3b2a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
+        }
+        function pic(f, z = 220) { return new Promise(r => { if (!f) return r(); const fr = new FileReader(); fr.onload = () => { const im = new Image(); im.onload = () => { const c = document.createElement("canvas"), m = Math.min(im.width, im.height); c.width = c.height = z; c.getContext("2d").drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, z, z); r(c.toDataURL("image/jpeg", .8)) }; im.onerror = () => r(); im.src = fr.result }; fr.readAsDataURL(f) }) }
+        const HAB = { 1: ["Roçadeira", "Poda", "Paisagismo", "Limpeza de terrenos"], 2: ["Limpeza pesada", "Organização", "Passar roupa"], 3: ["Pintura interna", "Pintura externa", "Textura", "Massa corrida"], 4: ["Instalações", "Quadro de energia", "Emergência"], 5: ["Vazamentos", "Caixa d'água", "Desentupimento"], 6: ["Alvenaria", "Pisos", "Reboco", "Calçadas"], 7: ["Guarda-roupas", "Cozinhas", "Painéis de TV"], 8: ["Caminhão baú", "Ajudantes", "Embalagem"] };
+        Object.assign(HAB, {
+            9: ["Roçadeira", "Limpeza de lotes", "Jardins"], 10: ["Faxina completa", "Vidros", "Organização"], 11: ["Pintura interna", "Fachadas", "Textura"], 12: ["Móveis sob medida", "Portas", "Restauro"],
+            13: ["Limpeza", "Passar roupa", "Organização"], 14: ["Plantão 24h", "Quadro de luz", "Ventiladores"], 15: ["Guarda-roupas", "Cozinhas", "Racks"], 16: ["Calçadas", "Reboco", "Alvenaria"],
+            17: ["Pós-obra", "Vidros", "Limpeza pesada"], 18: ["Plantão 24h", "Vazamentos", "Caixa d'água"], 19: ["Caminhão baú", "Ajudantes", "Fim de semana"], 20: ["Fim de semana", "Faxina pesada", "Roupas"],
+            21: ["Planejados", "Decks", "Restauro"], 22: ["Poda", "Paisagismo", "Roçadeira"], 23: ["Atende à noite", "Apartamentos", "Limpeza"], 24: ["Faz-tudo", "Chuveiros", "Prateleiras"],
+            25: ["Diárias", "Fim de obra", "Organização"], 26: ["Reformas", "Banheiros", "Muros"], 27: ["Ar-condicionado", "Luminárias", "Fiação"], 28: ["Portões", "Infiltração", "Pintura interna"],
+            29: ["Fim de semana", "Roçadeira", "Terrenos"], 30: ["Casas de família", "Roupas", "Organização"], 31: ["Todos os dias", "Montagem", "Embalagem"], 32: ["Planejados", "Painéis de TV", "Ajustes"],
+            33: ["Registros", "Vasos", "Desentupimento"], 34: ["Sofás", "Comercial", "Residencial"], 35: ["Pisos", "Azulejos", "Acabamento"], 36: ["Paisagismo", "Hortas", "Jardins"],
+            37: ["Fiação", "NR-10", "Quadros"], 38: ["Apartamentos", "Textura", "Grafiato"], 39: ["Cerca viva", "Terrenos", "Roçadeira"], 40: ["Móveis pequenos", "Quadros", "Reparos rápidos"]
+        });
+        const I = { flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>', star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>', heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>', pin: '<path d="M12 21s-6-5.5-6-10a6 6 0 0 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', cash: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>', chat: '<path d="M4 5h16v11H9l-5 4z"/>', wpp: '<path d="M5 19l1.3-4A8 8 0 1 1 9 17.7z"/>' };
+        const ic = n => `<svg viewBox="0 0 24 24">${I[n]}</svg>`;
+        const scene = (e, a, b) => "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="120" height="120" fill="url(#g)"/><text x="60" y="78" font-size="54" text-anchor="middle">${e}</text></svg>`);
+        const WK = { 1: [["🌱", "#3fb67a", "#1f6f46", "Quintal depois do corte"], ["🌿", "#6fcf97", "#2a7d4f", "Poda de cerca viva"]], 2: [["🧼", "#7fd1e8", "#2a7a9a", "Sala pós-obra"], ["🧹", "#f4d27a", "#c98f12", "Cozinha organizada"]], 3: [["🎨", "#f08a5d", "#b8401a", "Sala pintada"], ["🖌️", "#9ad1c1", "#2f7d6a", "Quarto em dois tons"]], 4: [["💡", "#f4d27a", "#c98f12", "Quadro de luz novo"], ["🔌", "#c9b6f0", "#6a4fb3", "Tomadas trocadas"]], 5: [["🚰", "#7fd1e8", "#2a7a9a", "Torneira trocada"], ["🔧", "#9fb3c0", "#4a6578", "Reparo de cano"]], 6: [["🧱", "#e0a97c", "#9a5a2b", "Muro novo"], ["🏗️", "#f4d27a", "#c98f12", "Piso assentado"]], 7: [["🪑", "#e0a97c", "#9a5a2b", "Guarda-roupa montado"], ["📺", "#9fb3c0", "#4a6578", "Painel de TV"]], 8: [["🚚", "#f08a5d", "#b8401a", "Mudança concluída"], ["📦", "#e0a97c", "#9a5a2b", "Embalagem de móveis"]] };
+        /* fotos de trabalhos (ilustrativas) para os prestadores novos, conforme a categoria */
+        const WKC = {
+            "Corte de grama": [["🌱", "#3fb67a", "#1f6f46", "Gramado aparado"], ["🌾", "#9ad1c1", "#2f7d6a", "Terreno limpo"]],
+            "Jardinagem": [["🌿", "#6fcf97", "#2a7d4f", "Jardim renovado"], ["🌳", "#3fb67a", "#1f6f46", "Poda de árvore"]],
+            "Limpeza": [["🧼", "#7fd1e8", "#2a7a9a", "Sala limpa"], ["✨", "#f4d27a", "#c98f12", "Pós-obra impecável"]],
+            "Diarista": [["🧹", "#f4d27a", "#c98f12", "Casa organizada"], ["🧺", "#9ad1c1", "#2f7d6a", "Roupas em dia"]],
+            "Pintura": [["🎨", "#f08a5d", "#b8401a", "Sala pintada"], ["🖌️", "#9ad1c1", "#2f7d6a", "Quarto renovado"]],
+            "Pedreiro": [["🧱", "#e0a97c", "#9a5a2b", "Muro novo"], ["🏗️", "#f4d27a", "#c98f12", "Piso assentado"]],
+            "Eletricista": [["💡", "#f4d27a", "#c98f12", "Iluminação nova"], ["🔌", "#c9b6f0", "#6a4fb3", "Tomadas trocadas"]],
+            "Encanador": [["🚰", "#7fd1e8", "#2a7a9a", "Torneira trocada"], ["🔧", "#9fb3c0", "#4a6578", "Reparo de cano"]],
+            "Marceneiro": [["🪚", "#e0a97c", "#9a5a2b", "Armário sob medida"], ["🪵", "#c68642", "#7a4a1c", "Móvel restaurado"]],
+            "Mudanças": [["🚚", "#f08a5d", "#b8401a", "Mudança concluída"], ["📦", "#e0a97c", "#9a5a2b", "Embalagem de móveis"]],
+            "Reparos em geral": [["🔧", "#9fb3c0", "#4a6578", "Reparo concluído"], ["🛠️", "#f4d27a", "#c98f12", "Ajustes na casa"]],
+            "Montagem de móveis": [["🪑", "#e0a97c", "#9a5a2b", "Guarda-roupa montado"], ["📺", "#9fb3c0", "#4a6578", "Painel de TV"]]
+        };
+        BASE.forEach(p => { if (!WK[p.id] && p.id < 100 && p.id > 8 && p.id <= 40) WK[p.id] = p.cats.flatMap((c, i) => (WKC[c] || []).slice(0, i ? 1 : 2)).slice(0, 3) });
+        AV0[0].fotos = [scene("🌱", "#3fb67a", "#1f6f46")]; AV0[3].fotos = [scene("🧼", "#7fd1e8", "#2a7a9a")]; AV0[5].fotos = [scene("🎨", "#f08a5d", "#b8401a"), scene("🖌️", "#9ad1c1", "#2f7d6a")]; AV0[6].fotos = [scene("💡", "#f4d27a", "#c98f12")];
+        const works = id => (WK[id] || []).map(x => ({ img: scene(x[0], x[1], x[2]), leg: x[3] })).concat(S.work.filter(x => x.pid === id));
+        const zoom = s => { $("#lbi").src = s; $("#lb").classList.add("on") }; $("#lb").onclick = () => $("#lb").classList.remove("on");
+
+        /* ===== Contas: login, cadastro (cliente/prestador) e painel do prestador ===== */
+        const AUTH = { mode: "in", tipo: "cliente", volta: 0 };
+        const me = () => S.users.find(u => u.id === S.me) || null;
+        const favs = () => (me() && me().fav) || [];
+        const fmtWpp = w => { const d = String(w).slice(2); return `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}` };
+        async function hash(s) { try { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("biko:" + s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("") } catch (e) { let h = 5381; for (const c of "biko:" + s) h = (h * 33 ^ c.charCodeAt(0)) >>> 0; return "f" + h } }
+        const hdr = (t, s) => `<div class="top"><div class="loc"><b style="font-size:1.4rem">${t}</b><br><small>${s}</small></div></div>`;
+        function updTab() { const u = me(); $('#tabs [data-t="me"]').innerHTML = `<svg viewBox="0 0 24 24">${u ? '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' : '<path d="M10 17l5-5-5-5M15 12H3M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/>'}</svg>${u ? (u.tipo === "prestador" ? "Meu perfil" : "Conta") : "Entrar"}` }
+        function pedeLogin(id, msg) { AUTH.volta = id || 0; AUTH.mode = "in"; $("#det").classList.remove("on"); closeSheet(); tab("me"); toast(msg || "Entre para ver o WhatsApp do prestador") }
+        function posAuth(msg) { updTab(); chips(); catGrid(); list(); const v = AUTH.volta, u = me(); AUTH.volta = 0; if (v) { tab("home"); detail(v) } else tab(u.tipo === "prestador" ? "me" : "home"); toast(msg) }
+        async function entrar() {
+            const email = $("#l-e").value.trim().toLowerCase(), h = await hash($("#l-p").value);
+            const u = S.users.find(x => x.email === email && x.h === h); if (!u) return toast("E-mail ou senha incorretos");
+            S.me = u.id; save(); posAuth("Bem-vindo(a) de volta, " + u.nome.split(" ")[0])
+        }
+        async function cadastrar() {
+            const tipo = AUTH.tipo, nome = $("#s-n").value.trim(), email = $("#s-e").value.trim().toLowerCase(), senha = $("#s-p").value;
+            if (!nome || !/^\S+@\S+\.\S+$/.test(email)) return toast("Preencha seu nome e um e-mail válido");
+            if (senha.length < 6) return toast("A senha precisa ter ao menos 6 caracteres");
+            if (S.users.some(u => u.email === email)) return toast("Esse e-mail já tem conta. Use a aba Entrar.");
+            const u = { id: Date.now(), tipo, nome, email, h: await hash(senha), fav: [] };
+            if (tipo === "prestador") {
+                const w = $("#s-w").value.replace(/\D/g, ""); if (w.length < 10) return toast("Informe seu WhatsApp com DDD");
+                const hor = horRead("s"); if (!horOk(hor)) return toast("Marque ao menos um dia e use horário final maior que o inicial");
+                const foto = await pic($("#s-f").files[0]), s = $("#s-s").value, pid = 100 + S.provs.length;
+                S.provs.push({ uid: u.id, hor, foto, id: pid, nome, cats: [s], bairro: $("#s-b").value, desde: new Date().toISOString().slice(0, 10), dest: 0, on: 1, wpp: "55" + w, bio: "Atendo em Campo Mourão. Chame no WhatsApp para combinar valor e horário.", sv: [[s, 0]] }); u.pid = pid
+            }
+            S.users.push(u); S.me = u.id; save(); posAuth("Conta criada! Bem-vindo(a), " + nome.split(" ")[0])
+        }
+        function sair() { S.me = null; save(); AUTH.mode = "in"; updTab(); list(); $("#det").classList.remove("on"); tab("home"); toast("Você saiu da conta") }
+        function authHTML(en) {
+            const c = AUTH.tipo === "cliente";
+            const seg = `<div class="seg"><button data-m="in" class="${en ? "on" : ""}">Entrar</button><button data-m="up" class="${en ? "" : "on"}">Criar conta</button></div>`;
+            if (en) return seg + `<label for="l-e">E-mail</label><input class="f" id="l-e" type="email" autocomplete="email"><label for="l-p">Senha</label><input class="f" id="l-p" type="password" autocomplete="current-password"><button class="btn" style="width:100%;margin-top:18px" id="l-ok">Entrar</button><button data-m="up" style="color:var(--mut);font-weight:800;font-size:.86rem;padding:14px 0;display:block;margin:0 auto">Ainda não tem conta? Criar agora</button>`;
+            return seg + `<label>Eu sou</label><div class="tipo"><button data-tp="cliente" class="${c ? "on" : ""}"><span>🙋</span>Cliente<small>Quero contratar</small></button><button data-tp="prestador" class="${c ? "" : "on"}"><span>🛠️</span>Prestador de serviço<small>Quero oferecer serviços</small></button></div>
+<label for="s-n">Seu nome</label><input class="f" id="s-n" autocomplete="name"><label for="s-e">E-mail</label><input class="f" id="s-e" type="email" autocomplete="email"><label for="s-p">Senha (mínimo 6 caracteres)</label><input class="f" id="s-p" type="password" autocomplete="new-password">
+<div id="pf" style="display:${c ? "none" : "block"}"><label for="s-s">Serviço que você faz</label><select class="f" id="s-s">${CATS.map(x => `<option>${x[0]}</option>`).join("")}</select><label for="s-b">Bairro</label><select class="f" id="s-b">${BAIRROS.map(b => `<option>${b}</option>`).join("")}</select><label for="s-w">WhatsApp com DDD</label><input class="f" id="s-w" inputmode="tel" placeholder="44 99999-9999"><label>Horários em que você atende</label>${horForm("s", HOR0)}<label for="s-f">Sua foto (opcional)</label><input class="f" type="file" accept="image/*" id="s-f"></div>
+<button class="btn" style="width:100%;margin-top:18px" id="s-ok">Criar conta</button>`
+        }
+        function painelHTML(u, p) {
+            return `<div class="row" style="align-items:center"><div class="av">${av(p, 58)}</div><div class="info"><div class="nm">${esc(p.nome)}</div><div class="sv">${esc(p.cats[0])} — ${esc(p.bairro)}</div><div class="meta">${p.on ? '<span class="on-t">● Aceitando serviços</span>' : '<span class="off">Agenda cheia</span>'}</div></div></div>
+<div style="display:flex;gap:10px"><button class="btn" id="pv">Ver meu perfil</button><button class="btn sec" id="pon">${p.on ? "Marcar agenda cheia" : "Voltar a aceitar"}</button></div>
+<div class="plan hl" style="margin-top:16px"><h3>Patrocinado</h3><ul><li>Aparece no topo da lista</li><li>Selo Patrocinado no seu perfil</li></ul><button class="btn ye" style="margin-top:14px;width:100%" id="pdest">Turbinar Serviços</button></div>
+<h2 style="margin-top:20px">Meus horários</h2><div id="h-f">${horForm("h", horOf(p))}</div><button class="btn" style="width:100%;margin-top:10px" id="h-ok">Salvar horários</button>
+<h2 style="margin-top:26px">Postar foto de trabalho</h2><label for="w-f">Foto</label><input class="f" type="file" accept="image/*" id="w-f"><label for="w-l">Legenda</label><input class="f" id="w-l" placeholder="Ex: Quintal depois do corte"><button class="btn" style="width:100%;margin-top:18px" id="w-ok">Postar foto</button>
+<button class="btn sec" style="width:100%;margin-top:26px" id="out">Sair da conta</button>`
+        }
+        function contaHTML(u) {
+            return `<div class="row" style="align-items:center"><div class="av" style="background:${COR[u.nome.length % 6]}!important;display:grid;place-items:center;font-size:1.6rem">${esc(u.nome[0].toUpperCase())}</div><div class="info"><div class="nm">${esc(u.nome)}</div><div class="sv">${esc(u.email)}</div><div class="meta"><span class="tag">Cliente</span></div></div></div>
+<div class="inf"><div class="ic">${ic("heart")}</div><div><small>Prestadores salvos</small>${favs().length}</div></div>
+<div class="inf"><div class="ic">${ic("wpp")}</div><div><small>WhatsApp dos prestadores</small>Liberado na sua conta</div></div>
+<button class="btn sec" style="width:100%;margin-top:22px" id="out">Sair da conta</button>`
+        }
+        function renderMe() {
+            const u = me(), h = $("#meh"), e = $("#mel");
+            if (!u) { const en = AUTH.mode === "in"; h.innerHTML = hdr(en ? "Entrar" : "Criar conta", "Veja o WhatsApp dos prestadores, salve e avalie"); e.innerHTML = authHTML(en); return }
+            const p = u.tipo === "prestador" && provs().find(x => x.id === u.pid);
+            if (p) { h.innerHTML = hdr("Meu perfil", "Gerencie como os clientes te veem"); e.innerHTML = painelHTML(u, p) }
+            else { h.innerHTML = hdr("Minha conta", "Você está conectado(a)"); e.innerHTML = contaHTML(u) }
+        }
+        async function postarFoto() { const u = me(), img = await pic($("#w-f").files[0], 560); if (!img) return toast("Escolha uma foto do seu trabalho"); S.work.push({ pid: u.pid, img, leg: $("#w-l").value.trim() || "Trabalho realizado", data: Date.now() }); save(); renderMe(); toast("Foto postada no seu perfil") }
+        function salvarH() { const u = me(), h = horRead("h"); if (!horOk(h)) return toast("Marque ao menos um dia e use horário final maior que o inicial"); provs().find(x => x.id === u.pid).hor = h; save(); list(); chips(); toast("Horários salvos") }
+        function alternaAgenda() { const p = provs().find(x => x.id === me().pid); p.on = p.on ? 0 : 1; save(); list(); chips(); renderMe() }
+        $("#mel").onclick = e => {
+            const b = e.target.closest("button"); if (!b) return;
+            if (b.dataset.m) { AUTH.mode = b.dataset.m; renderMe(); return }
+            if (b.dataset.tp) { AUTH.tipo = b.dataset.tp; $$(".tipo button").forEach(x => x.classList.toggle("on", x.dataset.tp === AUTH.tipo)); $("#pf").style.display = AUTH.tipo === "prestador" ? "block" : "none"; return }
+            const f = { "l-ok": entrar, "s-ok": cadastrar, out: sair, pv: () => detail(me().pid), pon: alternaAgenda, "h-ok": salvarH, "w-ok": postarFoto, pdest: () => toast("Em breve: fale com a equipe do Biko para entrar no topo") }[b.id]; f && f()
+        };
+        $("#mel").onkeydown = e => { if (e.key === "Enter" && e.target.matches("#l-e,#l-p")) entrar() };
+
+        const F = { q: "", cat: "", bairro: "", min: 0, agora: false };
+        function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 2400) }
+        function tab(t) { $$(".screen:not(#splash)").forEach(s => s.classList.toggle("on", s.id === t)); $$("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t)); $("#tabs").style.display = "flex"; if (t === "saved") renderSalvos(); if (t === "me") renderMe() }
+        function chips() { $("#chips").innerHTML = `<button class="chip${F.agora ? " on" : ""}" data-a="1">🟢 Disponível agora <span style="opacity:.8">(${provs().filter(p => p.on && aberto(p)).length})</span></button>` + [["", "Todos"]].concat(CATS.map(c => [c[0], c[1] + " " + c[0]])).map(c => `<button class="chip${F.cat === c[0] ? " on" : ""}" data-c="${esc(c[0])}">${esc(c[1])}</button>`).join("") }
+        const norm = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+        function rowHTML(p) { const n = nota(p.id), c = avsOf(p.id).length; return `<button class="row${p.dest ? " dest" : ""}" data-p="${p.id}"><div class="av">${av(p, 58)}</div><div class="info"><div class="nm">${esc(p.nome)}${p.dest ? '<span class="tag">Patrocinado</span>' : ""}</div><div class="sv">${esc(p.cats.join(" · "))} — ${esc(p.bairro)}</div><div class="meta"><span><span class="star">★</span> ${n ? n.toFixed(1) : "Novo"}${c ? ` <span class="off">(${c})</span>` : ""}</span>${!p.on ? '<span class="off">Sem agenda</span>' : aberto(p) ? '<span class="on-t">● Aberto agora</span>' : `<span class="off">${proxAbertura(p) || "Fechado agora"}</span>`}</div></div></button>` }
+        function list() {
+            const q = norm(F.q.trim());
+            const r = provs().filter(p => (!F.cat || p.cats.includes(F.cat)) && (!F.bairro || p.bairro === F.bairro) && nota(p.id) >= F.min && (!F.agora || (p.on && aberto(p))) && (!q || norm(p.nome + " " + p.cats.join(" ") + " " + p.bairro + " " + p.sv.map(s => s[0]).join(" ")).includes(q)))
+                .sort((a, b) => b.dest - a.dest || b.on - a.on || nota(b.id) - nota(a.id));
+            const vazio = `<div class="empty"><b>${F.agora ? "Ninguém aberto agora" : "Ninguém por aqui ainda"}</b>${F.agora ? "Nenhum prestador com esses filtros está atendendo neste horário." : "Tente outro serviço ou bairro, ou limpe os filtros."}<br><button class="btn sec" style="margin-top:14px;width:auto;flex:none;padding:12px 22px" data-clear="1">Limpar filtros</button></div>`;
+            $("#list").innerHTML = `<h2>${F.cat || "Prestadores"}<small>${r.length} ${r.length === 1 ? "encontrado" : "encontrados"}</small></h2>` + (r.length ? r.map(rowHTML).join("") : vazio);
+            const nf = (F.bairro ? 1 : 0) + (F.min ? 1 : 0), bd = $("#fbd"); bd.textContent = nf; bd.classList.toggle("on", nf > 0)
+        }
+        /* aba Salvos: mostra quem foi salvo (o mais recente primeiro) */
+        function renderSalvos() {
+            const r = favs().map(id => provs().find(p => p.id === id)).filter(Boolean).reverse();
+            $("#savedl").innerHTML = `<h2>Salvos<small>${r.length} ${r.length === 1 ? "prestador" : "prestadores"}</small></h2>` + (r.length ? r.map(rowHTML).join("") : '<div class="empty"><b>Nenhum prestador salvo</b>Abra o perfil de alguém e toque em “Salvar” para guardar aqui.</div>')
+        }
+        function detail(id) {
+            const p = provs().find(x => x.id === id), a = avsOf(id).sort((x, y) => y.data.localeCompare(x.data)), n = nota(id), fav = favs().includes(id), d = $("#det");
+            const w = works(id), cnt = k => a.filter(x => x.nota === k).length;
+            d.innerHTML = `<div class="topr"><button class="ib" id="bk" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><span></span><button class="ib" id="rp2" aria-label="Denunciar perfil">${ic("flag")}</button></div>
+<div class="scroll"><div class="hero"><div class="av" style="width:104px;height:104px;border-radius:34px;margin:0 auto 12px">${av(p, 104)}</div><h1>${esc(p.nome)}</h1><p>${esc(p.cats.join(" · "))}</p>${p.dest ? '<span class="tag" style="display:inline-block;margin-top:8px">Patrocinado</span>' : ""}${p.on ? '<p style="color:var(--ok);margin-top:6px">● Disponível para novos serviços</p>' : '<p style="margin-top:6px">● Agenda cheia no momento</p>'}</div>
+<div class="acts"><button class="act st" id="rv"><i>${ic("star")}</i>Avaliar</button><button class="act${fav ? " on" : ""}" id="fv"><i>${ic("heart")}</i>${fav ? "Salvo" : "Salvar"}</button><button class="act rd" id="rp"><i>${ic("flag")}</i>Denunciar</button></div>
+<div class="stats"><div><b><span class="star">★</span> ${n ? n.toFixed(1) : "Novo"}</b><small>${a.length} avaliações</small></div><div><b>${tempo(p.desde)}</b><small>no Biko</small></div></div>
+<h2>Sobre</h2><p class="bio">${esc(p.bio)}</p>
+<div class="sk">${(HAB[p.id] || p.cats).map(h => `<span>${esc(h)}</span>`).join("")}</div>
+<h2>Informações</h2><div class="inf"><div class="ic">${ic("pin")}</div><div><small>Bairro</small>${esc(p.bairro)}, Campo Mourão</div></div>
+<div class="inf" style="align-items:flex-start"><div class="ic">${ic("clock")}</div><div style="flex:1"><small>Horários de atendimento</small>${horList(p)}</div></div>
+<div class="inf"><div class="ic">${ic("cash")}</div><div><small>Pagamento</small>Combinado direto com o prestador</div></div><div class="inf"><div class="ic">${ic("chat")}</div><div><small>WhatsApp</small>${me() ? fmtWpp(p.wpp) : "🔒 Entre na sua conta para ver o número"}</div></div>
+<h2 style="margin-top:22px">Trabalhos realizados<small>fotos postadas por ${esc(p.nome.split(" ")[0])}</small></h2>${w.length ? `<div class="gal">${w.map(x => `<figure><img src="${x.img}" alt="${esc(x.leg)}"><figcaption>${esc(x.leg)}</figcaption></figure>`).join("")}</div>` : '<div class="empty">Ainda sem fotos de trabalhos.</div>'}<h2 style="margin-top:22px">Serviços</h2>${p.sv.map(s => `<div class="srv"><span>${esc(s[0])}</span></div>`).join("")}
+<h2 style="margin-top:22px">Avaliações<small>${a.length} no total</small></h2>
+<div class="sum"><div class="big"><b>${n ? n.toFixed(1) : "—"}</b><span class="star">${"★".repeat(Math.round(n))}</span><br><small>${a.length} avaliações</small></div><div class="dist">${[5, 4, 3, 2, 1].map(k => `<div>${k}★<i><u style="width:${a.length ? cnt(k) / a.length * 100 : 0}%"></u></i>${cnt(k)}</div>`).join("")}</div></div>
+${a.length ? a.map(v => `<div class="rev"><div class="h"><span class="who"><span class="av" style="background:${COR[v.autor.length % 6]}!important;display:grid;place-items:center;color:var(--navy);font-weight:900">${esc(v.autor[0])}</span><span>${esc(v.autor)}<br><small>${v.data.split("-").reverse().join("/")}</small></span></span><span class="star">${"★".repeat(v.nota)}</span></div>${esc(v.texto)}${v.fotos && v.fotos.length ? `<div class="shots">${v.fotos.map(f => `<img src="${f}" alt="Foto do serviço">`).join("")}</div>` : ""}</div>`).join("") : '<div class="empty"><b>Ainda sem avaliações</b>Contratou? Seja o primeiro a avaliar.</div>'}
+<button class="btn sec" style="width:100%;margin-top:14px" id="rv2">Escrever avaliação</button></div>
+<div class="bar"><button class="btn" id="wp">${ic("wpp")}${me() ? "Chamar no WhatsApp" : "Entrar para chamar no WhatsApp"}</button></div>`;
+            d.classList.add("on"); $("#tabs").style.display = "none";
+            $("#bk").onclick = () => { d.classList.remove("on"); $("#tabs").style.display = "flex"; renderSalvos() };
+            $("#wp").onclick = () => !me() ? pedeLogin(p.id) : window.open("https://wa.me/" + p.wpp + "?text=" + encodeURIComponent("Olá " + p.nome.split(" ")[0] + ", te encontrei no Biko. Você faz " + p.cats[0].toLowerCase() + "?"), "_blank");
+            $("#rv").onclick = $("#rv2").onclick = () => review(p); $("#rp").onclick = $("#rp2").onclick = () => report(p);
+            d.onclick = e => { if (e.target.matches(".shots img,.gal img")) zoom(e.target.src) }; $("#fv").onclick = () => { const u = me(); if (!u) return pedeLogin(p.id, "Entre para salvar prestadores"); u.fav = fav ? u.fav.filter(x => x !== id) : u.fav.concat(id); save(); renderSalvos(); detail(id); toast(fav ? "Removido dos salvos" : "Prestador salvo") }
+        }
+        function sheet(h) { $("#sheet").innerHTML = h; $("#ov").classList.add("on") }
+        const closeSheet = () => $("#ov").classList.remove("on");
+        function review(p) { const u = me(); if (!u) return pedeLogin(p.id, "Entre para avaliar"); if (u.pid === p.id) return toast("Você não pode avaliar o próprio perfil");
+            let st = 0;
+            sheet(`<h3>Avaliar ${esc(p.nome)}</h3><div class="stars" id="st">${[1, 2, 3, 4, 5].map(i => `<button data-s="${i}" aria-label="${i} estrelas">★</button>`).join("")}</div>
+<label for="r-f">Fotos do serviço (opcional, até 3)</label><input class="f" type="file" accept="image/*" multiple id="r-f"><label for="r-t">Como foi?</label><textarea class="f" id="r-t"></textarea>
+<button class="btn" style="width:100%;margin-top:18px" id="r-ok">Enviar avaliação</button>`);
+            $("#st").onclick = e => { const b = e.target.closest("button"); if (!b) return; st = +b.dataset.s; $$("#st button").forEach((x, i) => x.classList.toggle("on", i < st)) };
+            $("#r-ok").onclick = async () => {
+                const fotos = []; for (const f of [...$("#r-f").files].slice(0, 3)) { const x = await pic(f, 480); x && fotos.push(x) } const t = $("#r-t").value.trim(); if (!st || !t) return toast("Escolha as estrelas e conte como foi");
+                S.avs.push({ fotos, pid: p.id, autor: u.nome, nota: st, texto: t, data: new Date().toISOString().slice(0, 10) }); save(); closeSheet(); detail(p.id); list(); toast("Avaliação publicada")
+            }
+        }
+        function report(p) { if (!me()) return pedeLogin(p.id, "Entre para denunciar");
+            sheet(`<h3>Denunciar ${esc(p.nome)}</h3><label for="d-m">Motivo</label><select class="f" id="d-m"><option>Golpe ou cobrança indevida</option><option>Perfil falso</option><option>Serviço mal feito</option><option>Comportamento inadequado</option></select>
+<label for="d-t">Detalhes</label><textarea class="f" id="d-t"></textarea><button class="btn" style="width:100%;margin-top:18px" id="d-ok">Enviar denúncia</button>`);
+            $("#d-ok").onclick = () => { S.den.push({ pid: p.id, motivo: $("#d-m").value, texto: $("#d-t").value, data: Date.now() }); save(); closeSheet(); toast("Denúncia enviada para análise") }
+        }
+        function filtros() {
+            sheet(`<h3>Filtros</h3><label for="x-b">Bairro</label><select class="f" id="x-b"><option value="">Todos os bairros</option>${BAIRROS.map(b => `<option${F.bairro === b ? " selected" : ""}>${b}</option>`).join("")}</select>
+<label for="x-n">Avaliação mínima</label><select class="f" id="x-n">${[[0, "Qualquer nota"], [4, "4,0 ou mais"], [4.5, "4,5 ou mais"]].map(o => `<option value="${o[0]}"${F.min === o[0] ? " selected" : ""}>${o[1]}</option>`).join("")}</select>
+<div style="display:flex;gap:10px;margin-top:18px"><button class="btn sec" id="x-c">Limpar</button><button class="btn" id="x-ok" style="flex:2">Ver resultados</button></div>`);
+            $("#x-c").onclick = () => { F.bairro = ""; F.min = 0; closeSheet(); list() }; $("#x-ok").onclick = () => { F.bairro = $("#x-b").value; F.min = +$("#x-n").value; closeSheet(); list() }
+        }
+        $("#fbtn").onclick = filtros; $("#ov").onclick = e => { if (e.target.id === "ov") closeSheet() };
+        $("#q").oninput = e => { F.q = e.target.value; list() };
+        $("#chips").onclick = e => { const b = e.target.closest("button"); if (!b) return; if (b.dataset.a) { F.agora = !F.agora } else F.cat = b.dataset.c; chips(); list() };
+        $("#list").onclick = e => {
+            if (e.target.closest("[data-clear]")) { Object.assign(F, { q: "", cat: "", bairro: "", min: 0, agora: false }); $("#q").value = ""; chips(); list(); return }
+            const b = e.target.closest("[data-p]"); if (b) detail(+b.dataset.p)
+        };
+        $("#savedl").onclick = e => { const b = e.target.closest("[data-p]"); if (b) detail(+b.dataset.p) };
+        $("#tabs").onclick = e => { const b = e.target.closest("button"); if (b) tab(b.dataset.t) };
+        function catGrid() { $("#catgrid").innerHTML = CATS.map(c => `<button class="cat" data-c="${c[0]}"><span>${c[1]}</span>${c[0]}<small>${provs().filter(p => p.cats.includes(c[0])).length} prestadores</small></button>`).join(""); } catGrid();
+        $("#catgrid").onclick = e => { const b = e.target.closest("button"); if (!b) return; F.cat = b.dataset.c; chips(); list(); tab("home") };
+        chips(); list(); updTab(); $$(".screen:not(#splash)").forEach(s => s.classList.remove("on")); $("#tabs").style.display = "none";
+        setTimeout(() => { tab("home"); $("#splash").style.opacity = 0; setTimeout(() => $("#splash").style.display = "none", 500) }, 1700);
+    </script>
+</body>
+
+</html>
